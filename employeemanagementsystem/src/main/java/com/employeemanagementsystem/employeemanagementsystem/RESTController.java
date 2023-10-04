@@ -12,17 +12,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RESTController {
 
+    User admin = new User("admin", "please",1, "clean the fridge");
     ArrayList<User> users = new ArrayList<>();
 
-    User admin = new User("admin", "please",1);
-
-    @GetMapping(value = "/users/{userID}")
+    @PostMapping(value = "/users")
     public User getUser(@RequestBody UserCredentials SubmittedUsernameAndPassword) {
+        users.add(admin);
         for (User user : users) {
-            if (SubmittedUsernameAndPassword.username() == user.username())
-                if (SubmittedUsernameAndPassword.password() == user.password()) {
+            System.out.println(user);
+            System.out.println(SubmittedUsernameAndPassword.username());
+            System.out.println(SubmittedUsernameAndPassword.password());
+            if (SubmittedUsernameAndPassword.username().equals(user.username())) {
+                if (SubmittedUsernameAndPassword.password().equals(user.password())) {
                     return user;
                 }
+            }
 // potentally add faster sorting algorithm
         }
         System.out.println("Could not find user");
@@ -35,9 +39,9 @@ public class RESTController {
         
     }
 
-    @PostMapping("/users")
-    public void recieveUser(@RequestBody User user) {
+    // @PostMapping("/users")
+    // public void recieveUser(@RequestBody User user) {
 
         
-    }
+    // }
 }
