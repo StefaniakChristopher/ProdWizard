@@ -1,9 +1,9 @@
 package com.employeemanagementsystem.employeemanagementsystem;
 
-public record user(
+public record User(
     String username,
     String password,
-    String userID
+    int userID
 ) {}
     
 
