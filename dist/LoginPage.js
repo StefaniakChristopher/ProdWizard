@@ -1,10 +1,14 @@
 
 
 async function makePostRequest(data) {
+    console.log(data)
     try {
-      const response = await fetch("ljksdflksjdfklsdajfklsjfl;ksadjf;kldj", {
+      const response = await fetch("http://localhost:8080/users", {
         method: 'POST',
-        body: JSON.stringify(data), // Convert data to JSON format
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        }
       });
   
       if (!response.ok) {
@@ -14,7 +18,7 @@ async function makePostRequest(data) {
       const responseData = await response.json();
       console.log(responseData);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error: ', error);
     }
   }
   
@@ -23,13 +27,18 @@ async function makePostRequest(data) {
   
 
 document.getElementById('loginButton').addEventListener('click', function() {
-    const username = document.getElementById("username");
-    const password = document.getElementById("password");
-    makePostRequest({
-        "username": username,
-        "password": password
-    })
+  console.log("alligator")
+  let username = document.getElementById("username").value;
+  let password = document.getElementById("password").value;
+  makePostRequest({
+    "username": username,
+    "password": password
+})
 });
+
+//Browser can cache data which is stopping it from updating, the "-c-1" in the package.json prevents the browser from caching
+
+
 
 console.log("hello!");
 // let host = "http://localhost:8080";

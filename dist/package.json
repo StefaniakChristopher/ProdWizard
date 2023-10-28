@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "start": "node server.js" 
+        "start": "http-server -p 4000 -c-1" 
     }
 }
     
