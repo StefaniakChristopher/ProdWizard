@@ -12,19 +12,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RESTController {
 
-    User admin = new User("admin", "please",1, "clean the fridge");
+    User admin = new User("admin", "please", "clean the fridge", true);
     ArrayList<User> users = new ArrayList<>();
+    
 
-    @PostMapping(value = "/users")
-    public User getUser(@RequestBody UserCredentials SubmittedUsernameAndPassword) {
-        users.add(admin);
+    @PostMapping(value = "/login")
+    public LoginData getUser(@RequestBody UserCredentials SubmittedUsernameAndPassword) {
+        
         for (User user : users) {
             System.out.println(user);
             System.out.println(SubmittedUsernameAndPassword.username());
             System.out.println(SubmittedUsernameAndPassword.password());
             if (SubmittedUsernameAndPassword.username().equals(user.username())) {
                 if (SubmittedUsernameAndPassword.password().equals(user.password())) {
-                    return user;
+                    return LoginData;
                 }
             }
 // potentally add faster sorting algorithm

@@ -1,9 +1,8 @@
 
 
 async function makePostRequest(data) {
-    console.log(data)
     try {
-      const response = await fetch("http://localhost:8080/users", {
+      const response = await fetch("http://localhost:8080/login", {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -17,6 +16,11 @@ async function makePostRequest(data) {
   
       const responseData = await response.json();
       console.log(responseData);
+      if (responseData != null) {
+        window.location.href = "home.html";
+      } else {
+        console.log("Username and/or password incorrect")
+      }
     } catch (error) {
       console.error('Error: ', error);
     }
