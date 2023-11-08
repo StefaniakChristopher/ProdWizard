@@ -1,3 +1,7 @@
+var currentLoginUser = {
+  apiToken: false
+}
+
 
 
 async function makePostRequest(data) {
@@ -14,17 +18,24 @@ async function makePostRequest(data) {
         throw new Error('Network response was not ok');
       }
   
-      const responseData = await response.json();
-      console.log(responseData);
-      if (responseData != null) {
+      currentLoginUser = await response.json();
+      console.log(currentLoginUser);
+      if (currentLoginUser.apiToken) {
         window.location.href = "home.html";
       } else {
         console.log("Username and/or password incorrect")
       }
+      res.cookie('apiToken', currentLoginUser.apiToken, {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'strict', // Helps prevent cross-site request forgery (CSRF) attacks
+      });
+      
     } catch (error) {
       console.error('Error: ', error);
     }
   }
+  
   
   const postData = { key: 'value' }; // Replace with your data
   

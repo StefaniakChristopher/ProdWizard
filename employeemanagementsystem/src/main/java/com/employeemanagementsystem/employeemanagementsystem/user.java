@@ -4,7 +4,7 @@ public record User(
     String username,
     String password,
     String tasks,
-    boolean acutalUser
+    boolean apiToken
 ) {}
     
 
