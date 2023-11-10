@@ -1,8 +1,13 @@
+import { verifySessionID } from "./VerifyLogin.mjs";
 
-// if (currentLoginUser.LoginFailed == false) {
+const { sessionID } = await verifySessionID()
 
-// }
-console.log(currentLoginUser)
+if(sessionID === "none") {
+  console.log("penguin")
+  window.location.href = "index.html"
+}
+
+
 console.log("dog")
 
 window.onscroll = function() {

@@ -1,51 +1,18 @@
-var currentLoginUser = {
-  apiToken: false
+import { verifySessionID, userLogin } from "./VerifyLogin.mjs";
+
+
+const { sessionID } = await verifySessionID()
+
+if(sessionID != "none") {
+  console.log(sessionID)
+  window.location.href = "home.html"
 }
-
-
-
-async function makePostRequest(data) {
-    try {
-      const response = await fetch("http://localhost:8080/login", {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
   
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-  
-      currentLoginUser = await response.json();
-      console.log(currentLoginUser);
-      if (currentLoginUser.apiToken) {
-        window.location.href = "home.html";
-      } else {
-        console.log("Username and/or password incorrect")
-      }
-      res.cookie('apiToken', currentLoginUser.apiToken, {
-        secure: true,
-        httpOnly: true,
-        sameSite: 'strict', // Helps prevent cross-site request forgery (CSRF) attacks
-      });
-      
-    } catch (error) {
-      console.error('Error: ', error);
-    }
-  }
-  
-  
-  const postData = { key: 'value' }; // Replace with your data
-  
-  
-
-document.getElementById('loginButton').addEventListener('click', function() {
+document.getElementById('loginButton').addEventListener('click', () => {
   console.log("alligator")
   let username = document.getElementById("username").value;
   let password = document.getElementById("password").value;
-  makePostRequest({
+  userLogin({
     "username": username,
     "password": password
 })
@@ -56,7 +23,4 @@ document.getElementById('loginButton').addEventListener('click', function() {
 
 
 console.log("hello!");
-// let host = "http://localhost:8080";
 
-
-// window.location.href = 'home.html';
