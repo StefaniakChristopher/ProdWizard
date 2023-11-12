@@ -14,28 +14,28 @@ import jakarta.servlet.http.HttpSession;
 @RestController
 public class RESTController {
 
-    User admin = new User("admin", "please", "clean the fridge", "none");
-    User failedAuth = new User(null, null, null, "none");
-    ArrayList<User> users = new ArrayList<>();
+    static User admin = new User("admin", "please", "clean the fridge", "none");
+    static User userNotFound = new User(null, null, null, "none");
+    private static ArrayList<User> users = new ArrayList<>();
+
+    public static ArrayList<User> getUsers(){
+        return users;
+    }
 
     public RESTController() {
         users.add(admin);
-        users.add(failedAuth);
+        users.add(userNotFound);
     }
     
 
     @PostMapping(value = "/login")
     public String getUser(@RequestBody UserCredentials SubmittedUsernameAndPassword, HttpSession session) {
         
-        for (User user : users) {
-            if (SubmittedUsernameAndPassword.username().equals(user.getUsername())) {
-                if (SubmittedUsernameAndPassword.password().equals(user.getPassword())) { // potentally add faster sorting algorithm
-                    String newSessionID = session.getId();
-                    user.setSessionID(newSessionID);
-                    return newSessionID;
-                }
-            }
-
+        User userToLogin = Find.findUser(SubmittedUsernameAndPassword);
+        if (userToLogin != userNotFound) {
+            String newSessionID = session.getId();
+            userToLogin.setSessionID(newSessionID); //does updating the userToLogin update that object in the arrayList? (i think so)
+            return newSessionID;
         }
         System.out.println("Could not find user");
         return "FAILED";
@@ -43,17 +43,28 @@ public class RESTController {
 
     @PostMapping("/session")
     public User verifySessionID(@RequestBody String sessionID) {
-        String proccessedSessionID = sessionID.replace("\"", "");
-        System.out.println(proccessedSessionID);
-        for (User user: users) {
-            System.out.println("Current sessionID" + proccessedSessionID);
-            System.out.println("User sessionID" + user.getSessionID());
-            if(proccessedSessionID.equals(user.getSessionID()) && proccessedSessionID != "none") {
-                return user;
-            }
+        return Find.findSessionID(sessionID);
+    }
+
+    @PostMapping("/newuser")
+    public Boolean createUser(@RequestBody UserCredentials SubmittedUsernameAndPassword) {
+        User foundUser = Find.findUser(SubmittedUsernameAndPassword);
+        if (foundUser == userNotFound) {
+            User createdUser = new User(SubmittedUsernameAndPassword.username(), SubmittedUsernameAndPassword.password(), null, "none");
+            System.out.println(createdUser);
+            System.out.println(createdUser.getUsername());
+            users.add(createdUser);
+            return true;
+        } else {
+            System.out.println("User alr exists");
+            return false;
         }
-        return failedAuth;
-        
+    }
+
+    @PostMapping("/signout")
+    public void signOut(@RequestBody String sessionID) {
+        User userToSignOut = Find.findSessionID(sessionID);
+        userToSignOut.setSessionID("none");
     }
 
     @DeleteMapping(value = "/users/{userID}")

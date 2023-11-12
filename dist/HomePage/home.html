@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Repeatable Boxes Page</title>
+    <link rel="stylesheet" type="text/css" href="home.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-title">Website Title</div>
+        <div class="header-actions">
+            <button id="create-user">Create User</button>
+            <div class="header-welcome">Welcome, User!</div>
+            <button class="sign-out-button" id="sign-out-button">Sign Out</button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Sidebar Links</h2>
+            <ul>
+                <li><a href="#">Link 1</a></li>
+                <li><a href="#">Link 2</a></li>
+                <li><a href="#">Link 3</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <h1>Main Content</h1>
+            <div class="box">
+                <h2>Box 1</h2>
+                <p>This is the content of Box 1.</p>
+            </div>
+            <div class="box">
+                <h2>Box 2</h2>
+                <p>This is the content of Box 2.</p>
+            </div>
+            <div class="box">
+                <h2>Box 3</h2>
+                <p>This is the content of Box 3.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="createUserModal" class="modal">
+        <span class="close-button" id="close-button">&times;</span>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button id="create-user-button">Create User</button>
+    </div>
+
+    <div id="overlay" class="overlay"></div>
+ 
+    <script type="module" src="HomePage.mjs"></script>
+</body>
+</html>
+ 

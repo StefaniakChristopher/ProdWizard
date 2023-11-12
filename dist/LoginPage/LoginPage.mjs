@@ -1,11 +1,11 @@
-import { verifySessionID, userLogin } from "./VerifyLogin.mjs";
+import { verifySessionID, userLogin } from "../VerifyLogin.mjs";
 
 
 const { sessionID } = await verifySessionID()
 
 if(sessionID != "none") {
   console.log(sessionID)
-  window.location.href = "home.html"
+  window.location.href = "../HomePage/home.html"
 }
   
 document.getElementById('loginButton').addEventListener('click', () => {
