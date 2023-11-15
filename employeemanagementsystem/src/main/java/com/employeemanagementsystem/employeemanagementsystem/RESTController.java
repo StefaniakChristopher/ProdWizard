@@ -14,8 +14,8 @@ import jakarta.servlet.http.HttpSession;
 @RestController
 public class RESTController {
 
-    static User admin = new User("admin", "please", "clean the fridge", "none");
-    static User userNotFound = new User(null, null, null, "none");
+    static User admin = new User("admin", "please", "hi", "clean the fridge", "none");
+    static User userNotFound = new User(null, null, null, null, "none");
     private static ArrayList<User> users = new ArrayList<>();
 
     public static ArrayList<User> getUsers(){
@@ -29,7 +29,7 @@ public class RESTController {
     
 
     @PostMapping(value = "/login")
-    public String getUser(@RequestBody UserCredentials SubmittedUsernameAndPassword, HttpSession session) {
+    public String getUser(@RequestBody User SubmittedUsernameAndPassword, HttpSession session) {
         
         User userToLogin = Find.findUser(SubmittedUsernameAndPassword);
         if (userToLogin != userNotFound) {
@@ -47,13 +47,23 @@ public class RESTController {
     }
 
     @PostMapping("/newuser")
-    public Boolean createUser(@RequestBody UserCredentials SubmittedUsernameAndPassword) {
-        User foundUser = Find.findUser(SubmittedUsernameAndPassword);
+    public Boolean createUser(@RequestBody User SubmittedUser) {
+        User foundUser = Find.findUser(SubmittedUser);
         if (foundUser == userNotFound) {
-            User createdUser = new User(SubmittedUsernameAndPassword.username(), SubmittedUsernameAndPassword.password(), null, "none");
+            User createdUser = new User(
+                SubmittedUser.getUsername(), 
+                SubmittedUser.getPassword(), 
+                SubmittedUser.getTeam(),
+                null, 
+                "none"
+            );
             System.out.println(createdUser);
             System.out.println(createdUser.getUsername());
+            System.out.println(createdUser.getTeam());
             users.add(createdUser);
+            if (!TeamData.getTeams().contains(createdUser.getTeam())) {
+                TeamData.addTeam(createdUser.getTeam());
+            }
             return true;
         } else {
             System.out.println("User alr exists");

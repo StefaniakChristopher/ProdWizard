@@ -31,9 +31,11 @@ document.getElementById('close-button').addEventListener('click', () => {
 document.getElementById('create-user-button').addEventListener('click', async () => {
   const username = document.getElementById("username").value
   const password = document.getElementById("password").value
+  const team = document.getElementById("team").value
   const userCreated = await createUser({
     "username": username, 
-    "password": password
+    "password": password,
+    "team": team
   })
   console.log(userCreated)
 

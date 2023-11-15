@@ -3,12 +3,14 @@ package com.employeemanagementsystem.employeemanagementsystem;
 public class User {
     private String username;
     private String password;
+    private String team;
     private String tasks;
     private String sessionID;
 
-    public User(String username, String password, String tasks, String sessionID) {
+    public User(String username, String password, String team, String tasks, String sessionID) {
         this.username = username;
         this.password = password;
+        this.team = team;
         this.tasks = tasks;
         this.sessionID = sessionID;
     }
@@ -36,6 +38,14 @@ public class User {
 
     public void setSessionID(String sessionID) {
         this.sessionID = sessionID;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
+    }
+
+    public String getTeam() {
+        return team;
     }
 }
 

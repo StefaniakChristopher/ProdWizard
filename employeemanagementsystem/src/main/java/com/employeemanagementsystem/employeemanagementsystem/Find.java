@@ -2,10 +2,10 @@ package com.employeemanagementsystem.employeemanagementsystem;
 
 public class Find {
 
-    public static User findUser(UserCredentials SubmittedUsernameAndPassword) {
+    public static User findUser(User SubmittedUsernameAndPassword) {
         for (User user : RESTController.getUsers()) {
-            if (SubmittedUsernameAndPassword.username().equals(user.getUsername())) {
-                if (SubmittedUsernameAndPassword.password().equals(user.getPassword())) { // potentally add faster
+            if (SubmittedUsernameAndPassword.getUsername().equals(user.getUsername())) {
+                if (SubmittedUsernameAndPassword.getPassword().equals(user.getPassword())) { // potentally add faster
                                                                                           // sorting algorithm
                     return user;
                 }
