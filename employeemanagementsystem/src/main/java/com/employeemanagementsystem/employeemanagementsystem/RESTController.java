@@ -16,8 +16,12 @@ public class RESTController {
 
     static User admin = new User("admin", "please", "hi", "clean the fridge", "none");
     static User userNotFound = new User(null, null, null, null, "none");
+
+    ArrayList<Integer> taskDataList = new ArrayList<>();
+       
+    
     private static ArrayList<User> users = new ArrayList<>();
-    private static ArrayList<Task> tasks = new ArrayList<>();
+    private static ArrayList<Task> currentTasks = new ArrayList<>();
 
     public static ArrayList<User> getUsers(){
         return users;
@@ -30,6 +34,12 @@ public class RESTController {
     public RESTController() {
         users.add(admin);
         users.add(userNotFound);
+        TaskData.taskDataLists.put("Sorting", taskDataList);
+        taskDataList.add(34);
+        taskDataList.add(25);
+        taskDataList.add(56);
+        taskDataList.add(87);
+        taskDataList.add(65);
     }
     
 
@@ -89,13 +99,19 @@ public class RESTController {
     }
 
     @PostMapping("/createTask")
-    public boolean createTask(@RequestBody User originOfRequest, Task taskToCreate) { //maybe dropdown menu to create tasks
-        return false;
+    public String createTask(@RequestBody Task taskToCreate) { //maybe dropdown menu to create tasks
+        String originOfRequestSessionID = taskToCreate.originOfRequestSessionID();
+        double completionTimeAvg = 0;
+        System.out.println("session ID" + originOfRequestSessionID);
+        User originUser = Find.findSessionID(originOfRequestSessionID);
+        if (!TaskData.taskDataLists.containsKey(taskToCreate.taskName())) {
+            TaskData.createTaskDataArray(taskToCreate.taskName());
+        } else {
+            completionTimeAvg = Statistics.meanValue(TaskData.taskDataLists.get(taskToCreate.taskName()));
+        }
+        Task newTask = new Task(taskToCreate.taskName(), taskToCreate.taskDescription(), null,  completionTimeAvg , originUser.getTeam(), originUser.getUsername());
+        System.out.println("task that was created: " + newTask);
+        currentTasks.add(newTask);
+        return "hi";
     }
-
-    // @PostMapping("/users")
-    // public void recieveUser(@RequestBody User user) {
-
-        
-    // }
 }

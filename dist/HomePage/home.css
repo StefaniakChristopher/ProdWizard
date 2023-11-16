@@ -145,15 +145,7 @@ body {
     font-size: 20px;
     cursor: pointer;
 }
-
-#username {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 16px;
-    box-sizing: border-box;
-    border: 1px solid #585858;
-}
-#password {
+.generalInput {
     width: 100%;
     padding: 8px;
     margin-bottom: 16px;
@@ -161,13 +153,6 @@ body {
     border: 1px solid #585858;
 }
 
-#team {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 16px;
-    box-sizing: border-box;
-    border: 1px solid #585858;
-}
 #create-task-button {
     position: relative;
     background-color: #333;

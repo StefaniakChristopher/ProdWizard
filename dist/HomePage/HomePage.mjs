@@ -1,4 +1,4 @@
-import { verifySessionID, createUser, signOut } from "../VerifyLogin.mjs";
+import { verifySessionID, createUser, signOut, createTask } from "../VerifyLogin.mjs";
 
 const { sessionID } = await verifySessionID()
 
@@ -9,7 +9,7 @@ if(sessionID === "none") {
 console.log("dog")
 
 const modalOpener = (button, modalType) => {
-    document.getElementById(button).addEventListener('click', () => {
+  document.getElementById(button).addEventListener('click', () => {
     document.getElementById(modalType).style.display = 'block';
     document.getElementById('overlay').style.display = 'block';
     // Set opacity to 1 after a short delay
@@ -37,8 +37,8 @@ const modalCloser = (button, modalType) => {
 modalCloser('close-button', 'createUserModal')
 modalOpener('create-user', 'createUserModal')
 
-modalCloser('close-button', 'createTaskModal')
-modalOpener('createTask', 'createTaskModal')
+modalCloser('task-close-button', 'createTaskModal')
+modalOpener('create-task-button', 'createTaskModal')
 
 document.getElementById('create-user-button').addEventListener('click', async () => {
   const username = document.getElementById("username").value
@@ -65,21 +65,28 @@ document.getElementById('sign-out-button').addEventListener('click', async () =>
 
 const mainContent = document.querySelector('.main-content');
 
-// document.getElementById('createTask').addEventListener('click', () => {
-//   // Create a new div element
-//   const newBox = document.createElement('div');
-//   newBox.className = 'box';
+document.getElementById('createTask').addEventListener('click', async () => {
+  const taskName = document.getElementById("taskName").value
+  const taskDescription = document.getElementById("taskDescription").value
+  const taskDetails = await createTask({
+    "taskName": taskName,
+    "taskDescription": taskDescription
+  })
+  console.log(taskDetails)
+  // Create a new div element
+  const newBox = document.createElement('div');
+  newBox.className = 'box';
 
-//   // Set content for the new box (you can modify this part)
-//   const numberOfBoxes = document.querySelectorAll('.box').length + 1;
-//   newBox.innerHTML = `
-//     <h2>Box ${numberOfBoxes}</h2>
-//     <p>This is the content of Box ${numberOfBoxes}.</p>
-//   `;
+  // Set content for the new box (you can modify this part)
+  const numberOfBoxes = document.querySelectorAll('.box').length + 1;
+  newBox.innerHTML = `
+    <h2>Box ${numberOfBoxes}</h2>
+    <p>This is the content of Box ${numberOfBoxes}.</p>
+  `;
 
-//   // Append the new box to the main content
-//   mainContent.appendChild(newBox);
-// })
+  // Append the new box to the main content
+  mainContent.appendChild(newBox);
+})
 
 
 

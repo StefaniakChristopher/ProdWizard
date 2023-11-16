@@ -136,4 +136,31 @@ const userLogin = async (loginCredentials) => {
 
   }
 
-export { retrieveCookies, verifySessionID, userLogin, createUser, signOut }
+  const createTask = async (task) => {
+    const originOfRequestSessionID = retrieveCookies()
+    task.originOfRequestSessionID = originOfRequestSessionID
+    const url = host + "/createTask"
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(task),
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const result = await response.text()
+      return result
+      
+      
+    } catch (error) {
+      console.error('Error: ', error);
+    }
+
+  }
+
+export { retrieveCookies, verifySessionID, userLogin, createUser, signOut, createTask }
