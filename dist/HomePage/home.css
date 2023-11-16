@@ -37,6 +37,7 @@ body {
     font-weight: bold;
     transition: background-color 0.3s ease;
     margin-right: 20px;
+    margin-left: 20px
 }
 
 /* Add a hover effect */
@@ -166,4 +167,29 @@ body {
     margin-bottom: 16px;
     box-sizing: border-box;
     border: 1px solid #585858;
+}
+#create-task-button {
+    position: relative;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    overflow: hidden;
+    text-transform: uppercase;
+}
+
+#create-task-button::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: #fff;
+    transition: width 0.3s ease;
+}
+
+#create-task-button:hover::after {
+    width: 100%;
 }

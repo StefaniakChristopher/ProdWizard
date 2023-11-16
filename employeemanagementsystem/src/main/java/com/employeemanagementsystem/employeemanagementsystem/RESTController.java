@@ -17,8 +17,13 @@ public class RESTController {
     static User admin = new User("admin", "please", "hi", "clean the fridge", "none");
     static User userNotFound = new User(null, null, null, null, "none");
     private static ArrayList<User> users = new ArrayList<>();
+    private static ArrayList<Task> tasks = new ArrayList<>();
 
     public static ArrayList<User> getUsers(){
+        return users;
+    }
+
+    public static ArrayList<User> getTasks(){
         return users;
     }
 
@@ -81,6 +86,11 @@ public class RESTController {
     public ResponseEntity<Object> deleteUser(@PathVariable Integer userID) {
         return null;
         
+    }
+
+    @PostMapping("/createTask")
+    public boolean createTask(@RequestBody User originOfRequest, Task taskToCreate) { //maybe dropdown menu to create tasks
+        return false;
     }
 
     // @PostMapping("/users")

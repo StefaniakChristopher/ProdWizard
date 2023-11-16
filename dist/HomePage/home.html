@@ -9,7 +9,10 @@
     <div class="header">
         <div class="header-title">Website Title</div>
         <div class="header-actions">
-            <button id="create-user">Create User</button>
+            
+            <button className="create-user" id="create-user">Create User</button>
+            
+            <button class="create-task-button" id="create-task-button">Create Task</button>
             <div class="header-welcome">Welcome, User!</div>
             <button class="sign-out-button" id="sign-out-button">Sign Out</button>
         </div>
@@ -40,6 +43,17 @@
         </div>
     </div>
 
+    <div id="createTaskModal" class="modal">
+        <span class="close-button" id="task-close-button">&times;</span>
+        <label for="taskName">Task Name:</label>
+        <input type="text" id="taskName" name="taskName" required>
+
+        <label for="taskDescription">:</label>
+        <input type="taskDescription" id="taskDescription" name="taskDescription" required>
+
+        <button id="createTask">Add Box</button>
+    </div>
+
     <div id="createUserModal" class="modal">
         <span class="close-button" id="close-button">&times;</span>
         <label for="username">Username:</label>
@@ -53,6 +67,8 @@
 
         <button id="create-user-button">Create User</button>
     </div>
+
+    
 
     <div id="overlay" class="overlay"></div>
  
