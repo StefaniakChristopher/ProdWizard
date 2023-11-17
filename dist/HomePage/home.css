@@ -53,6 +53,7 @@ body {
     cursor: pointer;
     overflow: hidden;
     text-transform: uppercase;
+    display:none;
 }
 
 #create-user::after {
@@ -196,11 +197,11 @@ body {
     margin-left: auto;
 }
 
-.completeTaskButton {
+.completeTaskButtonStyling {
     text-align: left;
   }
   
-.completeTaskButton button {
+.completeTaskButtonStyling button {
 background-color: #0d450f; /* Orange background color */
 color: white;
 border: none;
@@ -211,6 +212,6 @@ cursor: pointer;
 transition: background-color 0.3s ease; /* Smooth color transition on hover */
 }
 
-.completeTaskButton button:hover {
+.completeTaskButtonStyling button:hover {
 background-color: rgb(13, 151, 40); /* Darker shade of red on hover */
   }

@@ -18,7 +18,7 @@ public class RESTController {
     static User userNotFound = new User(null, null, null, null, "none");
     int TaskIDcounter = 0;
 
-    ArrayList<Integer> taskDataList = new ArrayList<>();
+    ArrayList<Long> taskDataList = new ArrayList<>();
        
     
     private static ArrayList<User> users = new ArrayList<>();
@@ -36,11 +36,11 @@ public class RESTController {
         users.add(admin);
         users.add(userNotFound);
         TaskData.taskDataLists.put("Sorting", taskDataList);
-        taskDataList.add(34);
-        taskDataList.add(25);
-        taskDataList.add(56);
-        taskDataList.add(87);
-        taskDataList.add(65);
+        taskDataList.add((long) 34);
+        taskDataList.add((long) 25);
+        taskDataList.add((long) 56);
+        taskDataList.add((long) 87);
+        taskDataList.add((long) 65);
     }
     
 
@@ -75,8 +75,9 @@ public class RESTController {
             );
             System.out.println(createdUser);
             System.out.println(createdUser.getUsername());
-            System.out.println(createdUser.getTeam());
+            
             users.add(createdUser);
+            System.out.println(createdUser.getTeam());
             if (!TeamData.getTeams().contains(createdUser.getTeam())) {
                 TeamData.addTeam(createdUser.getTeam());
             }
@@ -105,7 +106,16 @@ public class RESTController {
             completionTimeAvg = Statistics.meanValue(TaskData.taskDataLists.get(taskToCreate.taskName()));
         }
 
-        Task newTask = new Task(taskToCreate.taskName(), taskToCreate.taskDescription(), null,TaskIDcounter,  completionTimeAvg , originUser.getTeam(), originUser.getUsername());
+        Task newTask = new Task(
+            taskToCreate.taskName(), 
+            taskToCreate.taskDescription(), 
+            null,
+            TaskIDcounter,  
+            completionTimeAvg , 
+            originUser.getTeam(), 
+            originUser.getUsername(), 
+            System.currentTimeMillis()
+        );
         TaskIDcounter += 1;
         System.out.println("task that was created: " + newTask);
         currentTasks.add(newTask);
@@ -117,9 +127,12 @@ public class RESTController {
         return currentTasks;
     }
 
-    @DeleteMapping(value = "/completeTask/{taskID}")
-    public void deleteUser(@PathVariable Integer taskID) {
-        Task taskToDelete = Find.findTaskByID(taskID);
+    @PostMapping(value = "/completeTask/{taskID}")
+    public void deleteUser(@RequestBody Task taskIDandVolume) {
+        Task taskToDelete = Find.findTaskByID(taskIDandVolume.id());
+        long completionTime = System.currentTimeMillis() - taskToDelete.taskStartTime();
+        completionTime = completionTime/(1000*60);
+        TaskData.taskDataLists.get(taskToDelete.taskName()).add(completionTime);
         currentTasks.remove(taskToDelete); // use System.currentTimeMillis(); to track how long it took for the task to be completed
     }
 

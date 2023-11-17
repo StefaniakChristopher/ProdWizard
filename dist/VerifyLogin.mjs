@@ -99,7 +99,9 @@ const userLogin = async (loginCredentials) => {
       }
   
       const result = await response.text()
-      return result
+      if(!result) {
+        alert("User Already Exists")
+      }
       
       
     } catch (error) {
@@ -191,11 +193,13 @@ const userLogin = async (loginCredentials) => {
 
   }
 
-  const completeTask = async (taskID) => {
-    const url = host + "/completeTask/" + taskID
+  const completeTask = async (taskIDandVolume) => {
+    const { id } = taskIDandVolume
+    const url = host + "/completeTask/" + id
     try {
       const response = await fetch(url, {
-        method: 'DELETE',
+        method: 'POST',
+        body: JSON.stringify(taskIDandVolume),
         headers: {
           'Content-Type': 'application/json',
         }

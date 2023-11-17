@@ -2,16 +2,16 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Repeatable Boxes Page</title>
+    <title>Production Sync Home</title>
     <link rel="stylesheet" type="text/css" href="home.css">
 </head>
 <body>
     <div class="header">
-        <div class="header-title">Website Title</div>
+        <div class="header-title">ProdWizard</div>
         <div class="header-actions">
-            <button className="create-user" id="create-user">Create User</button>
+            <button className="create-user" id="create-user" display="hidden">Create User</button>
             <button class="create-task-button" id="create-task-button">Create Task</button>
-            <div class="header-welcome">Welcome, User!</div>
+            <div class="header-welcome">Welcome, <span id="welcome-name-placeholder"></span>!</div>
             <button class="sign-out-button" id="sign-out-button">Sign Out</button>
         </div>
     </div>
@@ -27,6 +27,14 @@
         <div class="main-content">
             <h1>Current Tasks</h1>
         </div>
+    </div>
+
+    <div id="enterVolumeModal" class="modal">
+        <span class="close-button" id="enterVolume-close-button">&times;</span>
+        <label for="volume">Volume:</label>
+        <input class="generalInput" type="text" id="volume" name="volume" required>
+
+        <button id="2ndCompleteTaskButton">Complete Task</button>
     </div>
 
     <div id="createTaskModal" class="modal">

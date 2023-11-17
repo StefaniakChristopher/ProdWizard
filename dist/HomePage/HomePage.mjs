@@ -1,10 +1,18 @@
 import { verifySessionID, createUser, signOut, createTask, getCurrentTasks, completeTask } from "../VerifyLogin.mjs";
 
-const { sessionID } = await verifySessionID()
+const { sessionID, username } = await verifySessionID()
 
 if (sessionID === "none") {
   console.log("penguin")
   window.location.href = "../LoginPage/index.html"
+}
+if (username === "admin") {
+  let hiddenCreateUserButton = document.getElementById('create-user');
+  hiddenCreateUserButton.style.display = 'block'; // or 'inline-block', 'inline', etc. depending on your layout
+}
+if (username) {
+  let signedInUserDisplay = document.getElementById('welcome-name-placeholder');
+  signedInUserDisplay.textContent = username
 }
 
 const mainContent = document.querySelector('.main-content');
@@ -20,15 +28,15 @@ const displayCurrentTasks = async (taskList) => {
       newBox.innerHTML = `
           <div class ="topOfBox">
             <h2>${task.taskName}</h2>
-            <p class="boxElement" id="expectedTimeCompletionDisplay">Expected Completion Time: ${task.avgTimeToComplete}</p>
+            <p class="boxElement" id="expectedTimeCompletionDisplay">Expected Completion Time: ${task.avgTimeToComplete} mins</p>
             <p class="boxElement" id="teamDisplay">Team: ${task.team}</p>
             <p class="boxElement" id="teamDisplay">Task Owner: ${task.taskOwner}</p>
           </div>
           <div class="bottomOfBox">
             <p id="taskDescriptionArea">${task.taskDescription}</p>
           </div>
-          <div task-info=${task.id} class="completeTaskButton">
-            <button class="completeTaskButton">Complete</button>
+          <div class="completeTaskButtonStyling">
+            <button task-info=${task.id} id="completeTaskButton"class="completeTaskButton">Complete</button>
           </div>
   `;
 
@@ -36,10 +44,15 @@ const displayCurrentTasks = async (taskList) => {
       mainContent.appendChild(newBox);
 
       const completeTaskButton = newBox.querySelector('.completeTaskButton');
-      completeTaskButton.addEventListener('click', function () {
-        const taskID = this.getAttribute('task-info');
+      document.getElementById('2ndCompleteTaskButton').addEventListener('click', function () {
+        const volume = document.getElementById('2ndCompleteTaskButton').value
+        const taskID = completeTaskButton.getAttribute('task-info');
+
         console.log('Task Name:', taskID);
-        completeTask(taskID)
+        completeTask({
+          "id": taskID,
+          "volume": volume
+        })
         newBox.remove();
       });
     });
@@ -50,22 +63,7 @@ const displayCurrentTasks = async (taskList) => {
 
 }
 
-const currentTasks = await getCurrentTasks()
-if (currentTasks.length === 0) {
-  const newBox = document.createElement('div');
-  newBox.className = 'box';
 
-  // Set content for the new box (you can modify this part)
-  newBox.innerHTML = `
-          <div class ="topOfBox">
-            <h2>No Tasks to Display, everything done</h2>
-          </div>
-  `;
-  // Append the new box to the main content
-  mainContent.appendChild(newBox);
-} else {
-  displayCurrentTasks(currentTasks)
-}
 
 
 console.log("dog")
@@ -94,6 +92,26 @@ const modalCloser = (button, modalType) => {
     }, 300);
   })
 }
+
+const currentTasks = await getCurrentTasks()
+if (currentTasks.length === 0) {
+  const newBox = document.createElement('div');
+  newBox.className = 'box';
+
+  // Set content for the new box (you can modify this part)
+  newBox.innerHTML = `
+          <div class ="topOfBox">
+            <h2>No Tasks to Display, everything done</h2>
+          </div>
+  `;
+  // Append the new box to the main content
+  mainContent.appendChild(newBox);
+} else {
+  displayCurrentTasks(currentTasks)
+  modalCloser('enterVolume-close-button','enterVolumeModal')
+  modalOpener('completeTaskButton','enterVolumeModal')
+}
+
 
 
 modalCloser('close-button', 'createUserModal')
@@ -141,20 +159,3 @@ document.getElementById('createTask').addEventListener('click', async () => {
 
 
 
-window.onscroll = function () {
-  makeHeaderSticky();
-};
-
-var header = document.querySelector(".header");
-var container = document.querySelector(".container");
-var headerHeight = header.offsetHeight;
-
-function makeHeaderSticky() {
-  if (window.pageYOffset >= headerHeight) {
-    header.classList.add("sticky");
-    container.style.marginTop = headerHeight + "px";
-  } else {
-    header.classList.remove("sticky");
-    container.style.marginTop = "0";
-  }
-}

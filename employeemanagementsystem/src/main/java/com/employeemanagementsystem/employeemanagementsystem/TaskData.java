@@ -5,14 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TaskData {
-    public static Map<String, ArrayList<Integer>> taskDataLists = new HashMap<>();
+    public static Map<String, ArrayList<Long>> taskDataLists = new HashMap<>();
 
     public static void createTaskDataArray(String taskName) {
-        ArrayList<Integer> taskDataList = new ArrayList<>();
+        ArrayList<Long> taskDataList = new ArrayList<>();
         taskDataLists.put(taskName, taskDataList);
     }
 
-    public static ArrayList<Integer> gettaskDataList(String taskName) {
+    public static ArrayList<Long> gettaskDataList(String taskName) {
         return taskDataLists.get(taskName);
     }
 }
