@@ -5,6 +5,7 @@ public record Task(
     String taskDescription,
     String originOfRequestSessionID,
     
+    int id,
     double avgTimeToComplete,
     String team,
     String taskOwner

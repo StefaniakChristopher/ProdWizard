@@ -16,6 +16,7 @@ public class RESTController {
 
     static User admin = new User("admin", "please", "hi", "clean the fridge", "none");
     static User userNotFound = new User(null, null, null, null, "none");
+    int TaskIDcounter = 0;
 
     ArrayList<Integer> taskDataList = new ArrayList<>();
        
@@ -27,8 +28,8 @@ public class RESTController {
         return users;
     }
 
-    public static ArrayList<User> getTasks(){
-        return users;
+    public static ArrayList<Task> getTasks(){
+        return currentTasks;
     }
 
     public RESTController() {
@@ -92,12 +93,6 @@ public class RESTController {
         userToSignOut.setSessionID("none");
     }
 
-    @DeleteMapping(value = "/users/{userID}")
-    public ResponseEntity<Object> deleteUser(@PathVariable Integer userID) {
-        return null;
-        
-    }
-
     @PostMapping("/createTask")
     public String createTask(@RequestBody Task taskToCreate) { //maybe dropdown menu to create tasks
         String originOfRequestSessionID = taskToCreate.originOfRequestSessionID();
@@ -109,9 +104,24 @@ public class RESTController {
         } else {
             completionTimeAvg = Statistics.meanValue(TaskData.taskDataLists.get(taskToCreate.taskName()));
         }
-        Task newTask = new Task(taskToCreate.taskName(), taskToCreate.taskDescription(), null,  completionTimeAvg , originUser.getTeam(), originUser.getUsername());
+
+        Task newTask = new Task(taskToCreate.taskName(), taskToCreate.taskDescription(), null,TaskIDcounter,  completionTimeAvg , originUser.getTeam(), originUser.getUsername());
+        TaskIDcounter += 1;
         System.out.println("task that was created: " + newTask);
         currentTasks.add(newTask);
         return "hi";
     }
+
+    @GetMapping("/retrieveTasks")
+    public ArrayList<Task> retieveTasks() {
+        return currentTasks;
+    }
+
+    @DeleteMapping(value = "/completeTask/{taskID}")
+    public void deleteUser(@PathVariable Integer taskID) {
+        Task taskToDelete = Find.findTaskByID(taskID);
+        currentTasks.remove(taskToDelete); // use System.currentTimeMillis(); to track how long it took for the task to be completed
+    }
+
+    
 }

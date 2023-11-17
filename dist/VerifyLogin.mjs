@@ -152,6 +152,8 @@ const userLogin = async (loginCredentials) => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+
+      getCurrentTasks()
   
       const result = await response.text()
       return result
@@ -163,4 +165,51 @@ const userLogin = async (loginCredentials) => {
 
   }
 
-export { retrieveCookies, verifySessionID, userLogin, createUser, signOut, createTask }
+  const getCurrentTasks = async () => {
+    const url = host + "/retrieveTasks"
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const result = await response.text()
+      console.log("this is the list in json:" + result)
+      const currentTasksArray = JSON.parse(result)
+      return currentTasksArray
+      
+      
+    } catch (error) {
+      console.error('Error: ', error);
+    }
+
+  }
+
+  const completeTask = async (taskID) => {
+    const url = host + "/completeTask/" + taskID
+    try {
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      
+      
+    } catch (error) {
+      console.error('Error: ', error);
+    }
+
+  }
+
+export { retrieveCookies, verifySessionID, userLogin, createUser, signOut, createTask, getCurrentTasks, completeTask }

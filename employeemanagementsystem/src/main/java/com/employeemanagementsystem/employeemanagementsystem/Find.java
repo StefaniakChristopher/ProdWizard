@@ -27,4 +27,13 @@ public class Find {
         return RESTController.userNotFound;
     }
 
+    public static Task findTaskByID(int ID) {
+        for (Task task: RESTController.getTasks()) {
+            if (task.id() == ID) {
+                return task;
+            }
+        }
+        return null;
+    }
+
 }
