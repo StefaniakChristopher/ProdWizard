@@ -160,6 +160,12 @@ public class RESTController {
         }
     }
 
+    @GetMapping("/retrieveTaskCategories")
+    public ArrayList<String> retrieveTaskCategories() {
+        return taskCategories;
+    }
+       
+
 
 
     

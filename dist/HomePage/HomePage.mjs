@@ -1,4 +1,4 @@
-import { verifySessionID, createUser, signOut, createTask, getCurrentTasks, completeTask, createTaskCategory } from "../VerifyLogin.mjs";
+import { verifySessionID, createUser, signOut, createTask, getCurrentTasks, completeTask, createTaskCategory, retrieveTaskCategories } from "../VerifyLogin.mjs";
 
 const { sessionID, username } = await verifySessionID()
 
@@ -18,6 +18,7 @@ if (username) {
 }
 
 const mainContent = document.querySelector('.main-content');
+const modals = document.querySelector('.modals')
 
 const displayCurrentTasks = async (taskList) => {
   console.log(taskList)
@@ -25,6 +26,7 @@ const displayCurrentTasks = async (taskList) => {
     taskList.forEach(task => {
       const newBox = document.createElement('div');
       newBox.className = 'box';
+      newBox.id = `taskBox-${task.id}`
 
       // Set content for the new box (you can modify this part)
       newBox.innerHTML = `
@@ -38,25 +40,41 @@ const displayCurrentTasks = async (taskList) => {
             <p id="taskDescriptionArea">${task.taskDescription}</p>
           </div>
           <div class="completeTaskButtonStyling">
-            <button task-info=${task.id} id="completeTaskButton"class="completeTaskButton">Complete</button>
+            <button task-info=${task.id} id="task-${task.id}"class="task-${task.id}">Complete</button>
           </div>
   `;
 
       // Append the new box to the main content
       mainContent.appendChild(newBox);
 
-      const completeTaskButton = newBox.querySelector('.completeTaskButton');
-      document.getElementById('2ndCompleteTaskButton').addEventListener('click', function () {
-        const volume = document.getElementById('2ndCompleteTaskButton').value
-        const taskID = completeTaskButton.getAttribute('task-info');
+      const newModal = document.createElement('div');
+      newModal.className = 'modal'
+      newModal.id = `enterVolumeModal${task.id}`
 
+      newModal.innerHTML = `
+        <span class="close-button" id="enterVolume-close-button${task.id}">&times;</span>
+        <label for="volume">Volume:</label>
+        <input class="generalInput" type="text" id="volume-${task.id}" required></input>
+        <button class="submitTaskButtons" task-info="${task.id}" id="submit-task-${task.id}">Submit Task</button>
+      `
+      modals.appendChild(newModal);
+      modalCloser(`enterVolume-close-button${task.id}`, newModal.id)
+      modalOpener('task-' + task.id , newModal.id)
+      
+      document.getElementById(`submit-task-${task.id}`).addEventListener('click', (Event) => {
+        const completeTaskButton = Event.target
+        console.log(completeTaskButton)
+        const volume = document.getElementById("volume-" + task.id).value
+        const taskID = completeTaskButton.getAttribute('task-info');
+      
         console.log('Task Name:', taskID);
         completeTask({
           "id": taskID,
           "volume": volume
         })
-        newBox.remove();
+        document.getElementById(newBox.id).remove();
       });
+      
     });
   } catch (error) {
     console.log("Error: " + error)
@@ -64,6 +82,41 @@ const displayCurrentTasks = async (taskList) => {
 
 
 }
+
+
+
+const newOption = (optionName) => {
+  const dropDownMenuItself = document.getElementById('taskName')
+  const newOption = document.createElement('option');
+  newOption.value = optionName
+  newOption.textContent = optionName
+
+  dropDownMenuItself.appendChild(newOption);
+}
+
+const dropDownMenuAvailableTasks = async (taskCategoryList) => {
+  console.log(taskCategoryList)
+  try {
+    const dropDownMenuItself = document.getElementById('taskName')
+    dropDownMenuItself.innerHTML = "";
+    if(taskCategoryList.length != 0) {
+
+      taskCategoryList.forEach(taskCategory => {
+        newOption(taskCategory)
+    } )
+
+  } else {
+      newOption("No Tasks Avaiable")
+  }
+    
+  } catch (error) {
+    console.log("Error: " + error)
+  }
+
+
+}
+
+
 
 
 
@@ -110,9 +163,13 @@ if (currentTasks.length === 0) {
   mainContent.appendChild(newBox);
 } else {
   displayCurrentTasks(currentTasks)
-  modalCloser('enterVolume-close-button','enterVolumeModal')
-  modalOpener('completeTaskButton','enterVolumeModal')
 }
+
+
+document.getElementById('create-task-button').addEventListener('click', async () => {
+  dropDownMenuAvailableTasks(await retrieveTaskCategories())
+})
+
 
 
 
@@ -165,6 +222,7 @@ document.getElementById('createTaskCategoryButton').addEventListener('click', as
   const response = await createTaskCategory(taskCategoryName)
   console.log(taskCategoryName)
 })
+
 
 
 

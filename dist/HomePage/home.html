@@ -30,51 +30,47 @@
             <h1>Current Tasks</h1>
         </div>
     </div>
-
-    <div id="enterTaskCategoryModal" class="modal">
-        <span class="close-button" id="enterTaskCategory-close-button">&times;</span>
-        <label for="taskCategory">Task Category Name:</label>
-        <input class="generalInput" type="text" id="taskCategory" name="taskCategory" required>
-
-        <button id="createTaskCategoryButton">Create Category</button>
-    </div>
-
-    <div id="enterVolumeModal" class="modal">
-        <span class="close-button" id="enterVolume-close-button">&times;</span>
-        <label for="volume">Volume:</label>
-        <input class="generalInput" type="text" id="volume" name="volume" required>
-
-        <button id="2ndCompleteTaskButton">Complete Task</button>
-    </div>
-
-    <div id="createTaskModal" class="modal">
-        <span class="close-button" id="task-close-button">&times;</span>
-        <label for="taskName">Task Name:</label>
-        <input class="generalInput" type="text" id="taskName" name="taskName" required>
-
-        <label for="taskDescription">Task Description:</label>
-        <input class="generalInput" type="taskDescription" id="taskDescription" name="taskDescription" required>
-
-        <button id="createTask">Create Task</button>
-    </div>
-
-    <div id="createUserModal" class="modal">
-        <span class="close-button" id="close-button">&times;</span>
-        <label for="username">Username:</label>
-        <input class="generalInput" type="text" id="username" name="username" required>
-
-        <label for="password">Password:</label>
-        <input class="generalInput" type="password" id="password" name="password" required>
-
-        <label for="team">Team:</label>
-        <input class="generalInput" type="text" id="team" name="team" required>
-
-        <button id="create-user-button">Create User</button>
-    </div>
-
+    <div class="modals">
+        <div id="enterTaskCategoryModal" class="modal">
+            <span class="close-button" id="enterTaskCategory-close-button">&times;</span>
+            <label for="taskCategory">Task Category Name:</label>
+            <input class="generalInput" type="text" id="taskCategory" name="taskCategory" required>
     
-
-    <div id="overlay" class="overlay"></div>
+            <button id="createTaskCategoryButton">Create Category</button>
+        </div>
+    
+        <div id="createTaskModal" class="modal">
+            <span class="close-button" id="task-close-button">&times;</span>
+            <label for="taskName">Task Name:</label>
+            <select class="generalInput" type="text" id="taskName" name="taskName" required>
+                <option value="option1">Option 1</option>
+            </select>
+    
+            <label for="taskDescription">Task Description:</label>
+            <input class="generalInput" type="taskDescription" id="taskDescription" name="taskDescription" required>
+    
+            <button id="createTask">Create Task</button>
+        </div>
+    
+        <div id="createUserModal" class="modal">
+            <span class="close-button" id="close-button">&times;</span>
+            <label for="username">Username:</label>
+            <input class="generalInput" type="text" id="username" name="username" required>
+    
+            <label for="password">Password:</label>
+            <input class="generalInput" type="password" id="password" name="password" required>
+    
+            <label for="team">Team:</label>
+            <input class="generalInput" type="text" id="team" name="team" required>
+    
+            <button id="create-user-button">Create User</button>
+        </div>
+    
+        
+    
+        <div id="overlay" class="overlay"></div>
+    </div>
+    
  
     <script type="module" src="HomePage.mjs"></script>
 </body>
