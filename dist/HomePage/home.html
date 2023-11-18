@@ -9,8 +9,10 @@
     <div class="header">
         <div class="header-title">ProdWizard</div>
         <div class="header-actions">
-            <button className="create-user" id="create-user" display="hidden">Create User</button>
-            <button class="create-task-button" id="create-task-button">Create Task</button>
+            <button class="navbar-option adminOnlyButton" id="create-task-category-button">Create Task Category</button>
+            <button class="navbar-option adminOnlyButton" id="create-user">Create User</button>
+            <button class="navbar-option" id="create-task-button">Create Task</button>
+            
             <div class="header-welcome">Welcome, <span id="welcome-name-placeholder"></span>!</div>
             <button class="sign-out-button" id="sign-out-button">Sign Out</button>
         </div>
@@ -27,6 +29,14 @@
         <div class="main-content">
             <h1>Current Tasks</h1>
         </div>
+    </div>
+
+    <div id="enterTaskCategoryModal" class="modal">
+        <span class="close-button" id="enterTaskCategory-close-button">&times;</span>
+        <label for="taskCategory">Task Category Name:</label>
+        <input class="generalInput" type="text" id="taskCategory" name="taskCategory" required>
+
+        <button id="createTaskCategoryButton">Create Category</button>
     </div>
 
     <div id="enterVolumeModal" class="modal">

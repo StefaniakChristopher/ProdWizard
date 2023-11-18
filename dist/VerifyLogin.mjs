@@ -216,4 +216,26 @@ const userLogin = async (loginCredentials) => {
 
   }
 
-export { retrieveCookies, verifySessionID, userLogin, createUser, signOut, createTask, getCurrentTasks, completeTask }
+  const createTaskCategory = async (taskCategoryName) => {
+    const url = host + "/createTaskCategory"
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(taskCategoryName),
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      
+      
+    } catch (error) {
+      console.error('Error: ', error);
+    }
+
+  }
+
+export { retrieveCookies, verifySessionID, userLogin, createUser, signOut, createTask, getCurrentTasks, completeTask, createTaskCategory }

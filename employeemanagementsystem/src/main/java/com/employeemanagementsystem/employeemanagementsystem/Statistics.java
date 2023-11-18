@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class Statistics {
 
         
-    public static double meanValue(ArrayList<Long> taskData){
+    public static double meanValue(ArrayList<Double> taskData){
         double sum = 0;
-        for(Long integer: taskData) {
-            sum += integer;
+        for(Double number: taskData) {
+            sum += number;
         }
         double mean = sum/taskData.size();
 

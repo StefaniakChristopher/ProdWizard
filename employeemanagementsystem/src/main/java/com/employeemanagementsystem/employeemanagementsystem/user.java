@@ -1,11 +1,14 @@
 package com.employeemanagementsystem.employeemanagementsystem;
 
+import java.util.ArrayList;
+
 public class User {
     private String username;
     private String password;
     private String team;
     private String tasks;
     private String sessionID;
+    private ArrayList<CompletedTask> completedTasks = new ArrayList<>();
 
     public User(String username, String password, String team, String tasks, String sessionID) {
         this.username = username;
@@ -46,6 +49,10 @@ public class User {
 
     public String getTeam() {
         return team;
+    }
+
+    public ArrayList<CompletedTask> getCompletedTasks() {
+        return completedTasks;
     }
 }
 

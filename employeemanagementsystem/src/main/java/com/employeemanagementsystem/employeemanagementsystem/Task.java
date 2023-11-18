@@ -4,7 +4,7 @@ public record Task(
     String taskName,
     String taskDescription,
     String originOfRequestSessionID,
-    
+    int volume,
     
     int id,
     double avgTimeToComplete,

@@ -18,11 +18,12 @@ public class RESTController {
     static User userNotFound = new User(null, null, null, null, "none");
     int TaskIDcounter = 0;
 
-    ArrayList<Long> taskDataList = new ArrayList<>();
+    ArrayList<Double> taskDataList = new ArrayList<>();
        
     
     private static ArrayList<User> users = new ArrayList<>();
     private static ArrayList<Task> currentTasks = new ArrayList<>();
+    private static ArrayList<String> taskCategories = new ArrayList<>();
 
     public static ArrayList<User> getUsers(){
         return users;
@@ -36,18 +37,18 @@ public class RESTController {
         users.add(admin);
         users.add(userNotFound);
         TaskData.taskDataLists.put("Sorting", taskDataList);
-        taskDataList.add((long) 34);
-        taskDataList.add((long) 25);
-        taskDataList.add((long) 56);
-        taskDataList.add((long) 87);
-        taskDataList.add((long) 65);
+        taskDataList.add((double) 34);
+        taskDataList.add((double) 25);
+        taskDataList.add((double) 56);
+        taskDataList.add((double) 87);
+        taskDataList.add((double) 65);
     }
     
 
     @PostMapping(value = "/login")
     public String getUser(@RequestBody User SubmittedUsernameAndPassword, HttpSession session) {
         
-        User userToLogin = Find.findUser(SubmittedUsernameAndPassword);
+        User userToLogin = Find.loginUser(SubmittedUsernameAndPassword);
         if (userToLogin != userNotFound) {
             String newSessionID = session.getId();
             userToLogin.setSessionID(newSessionID); //does updating the userToLogin update that object in the arrayList? (i think so)
@@ -64,7 +65,7 @@ public class RESTController {
 
     @PostMapping("/newuser")
     public Boolean createUser(@RequestBody User SubmittedUser) {
-        User foundUser = Find.findUser(SubmittedUser);
+        User foundUser = Find.findUser(SubmittedUser.getUsername());
         if (foundUser == userNotFound) {
             User createdUser = new User(
                 SubmittedUser.getUsername(), 
@@ -110,6 +111,7 @@ public class RESTController {
             taskToCreate.taskName(), 
             taskToCreate.taskDescription(), 
             null,
+            0,
             TaskIDcounter,  
             completionTimeAvg , 
             originUser.getTeam(), 
@@ -128,13 +130,37 @@ public class RESTController {
     }
 
     @PostMapping(value = "/completeTask/{taskID}")
-    public void deleteUser(@RequestBody Task taskIDandVolume) {
+    public void completeTask(@RequestBody Task taskIDandVolume) {
         Task taskToDelete = Find.findTaskByID(taskIDandVolume.id());
-        long completionTime = System.currentTimeMillis() - taskToDelete.taskStartTime();
-        completionTime = completionTime/(1000*60);
+        double completionTime = System.currentTimeMillis() - taskToDelete.taskStartTime();
+        completionTime = (completionTime/(1000*60));
+        double rate = taskIDandVolume.volume()/completionTime;
         TaskData.taskDataLists.get(taskToDelete.taskName()).add(completionTime);
         currentTasks.remove(taskToDelete); // use System.currentTimeMillis(); to track how long it took for the task to be completed
+        CompletedTask completedTask = new CompletedTask(completionTime, taskToDelete.taskName(), taskIDandVolume.volume(), taskToDelete.taskDescription(), rate);
+        User taskCompleter = Find.findUser(taskToDelete.taskOwner());
+        taskCompleter.getCompletedTasks().add(completedTask);
     }
+
+    @PostMapping("/retrieveCompletedTasks")
+    public ArrayList<CompletedTask> retieveCompletedTasks(@RequestBody String username) {
+        User ownerOfCompletedTasks = Find.findUser(username);
+        return ownerOfCompletedTasks.getCompletedTasks();
+    }
+
+    @PostMapping("/createTaskCategory")
+    public boolean createTaskCategory(@RequestBody String taskCategory) {
+        String parsedTaskCategory = Misc.stringParser(taskCategory);
+        if (taskCategories.contains(parsedTaskCategory)) {
+            System.out.println("Category alr exists");
+            return false;
+        } else {
+            taskCategories.add(parsedTaskCategory);
+            return true;
+        }
+    }
+
+
 
     
 }

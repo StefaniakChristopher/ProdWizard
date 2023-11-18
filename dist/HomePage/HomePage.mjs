@@ -1,4 +1,4 @@
-import { verifySessionID, createUser, signOut, createTask, getCurrentTasks, completeTask } from "../VerifyLogin.mjs";
+import { verifySessionID, createUser, signOut, createTask, getCurrentTasks, completeTask, createTaskCategory } from "../VerifyLogin.mjs";
 
 const { sessionID, username } = await verifySessionID()
 
@@ -7,8 +7,10 @@ if (sessionID === "none") {
   window.location.href = "../LoginPage/index.html"
 }
 if (username === "admin") {
-  let hiddenCreateUserButton = document.getElementById('create-user');
-  hiddenCreateUserButton.style.display = 'block'; // or 'inline-block', 'inline', etc. depending on your layout
+  let adminOnlyButtons = document.getElementsByClassName('adminOnlyButton');
+  Array.from(adminOnlyButtons).forEach((button) => {
+    button.style.display = 'block'; 
+});
 }
 if (username) {
   let signedInUserDisplay = document.getElementById('welcome-name-placeholder');
@@ -120,6 +122,9 @@ modalOpener('create-user', 'createUserModal')
 modalCloser('task-close-button', 'createTaskModal')
 modalOpener('create-task-button', 'createTaskModal')
 
+modalCloser('enterTaskCategory-close-button', 'enterTaskCategoryModal')
+modalOpener('create-task-category-button', 'enterTaskCategoryModal')
+
 document.getElementById('create-user-button').addEventListener('click', async () => {
   const username = document.getElementById("username").value
   const password = document.getElementById("password").value
@@ -153,6 +158,12 @@ document.getElementById('createTask').addEventListener('click', async () => {
     "taskDescription": taskDescription
   })
   console.log(taskDetails)
+})
+
+document.getElementById('createTaskCategoryButton').addEventListener('click', async () => {
+  const taskCategoryName = document.getElementById("taskCategory").value
+  const response = await createTaskCategory(taskCategoryName)
+  console.log(taskCategoryName)
 })
 
 
