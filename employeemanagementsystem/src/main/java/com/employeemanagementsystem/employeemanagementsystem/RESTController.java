@@ -98,13 +98,13 @@ public class RESTController {
     @PostMapping("/createTask")
     public String createTask(@RequestBody Task taskToCreate) { //maybe dropdown menu to create tasks
         String originOfRequestSessionID = taskToCreate.originOfRequestSessionID();
-        double completionTimeAvg = 0;
+        double avgRate = 0;
         System.out.println("session ID" + originOfRequestSessionID);
         User originUser = Find.findSessionID(originOfRequestSessionID);
         if (!TaskData.taskDataLists.containsKey(taskToCreate.taskName())) {
             TaskData.createTaskDataArray(taskToCreate.taskName());
         } else {
-            completionTimeAvg = Statistics.meanValue(TaskData.taskDataLists.get(taskToCreate.taskName()));
+            avgRate = Statistics.meanValue(TaskData.taskDataLists.get(taskToCreate.taskName()));
         }
 
         Task newTask = new Task(
@@ -113,7 +113,7 @@ public class RESTController {
             null,
             0,
             TaskIDcounter,  
-            completionTimeAvg , 
+            avgRate , 
             originUser.getTeam(), 
             originUser.getUsername(), 
             System.currentTimeMillis()
@@ -135,9 +135,9 @@ public class RESTController {
         double completionTime = System.currentTimeMillis() - taskToDelete.taskStartTime();
         completionTime = (completionTime/(1000*60));
         double rate = taskIDandVolume.volume()/completionTime;
-        TaskData.taskDataLists.get(taskToDelete.taskName()).add(completionTime);
+        TaskData.taskDataLists.get(taskToDelete.taskName()).add(rate);
         currentTasks.remove(taskToDelete); // use System.currentTimeMillis(); to track how long it took for the task to be completed
-        CompletedTask completedTask = new CompletedTask(completionTime, taskToDelete.taskName(), taskIDandVolume.volume(), taskToDelete.taskDescription(), rate);
+        CompletedTask completedTask = new CompletedTask(completionTime, taskToDelete.taskName(), taskIDandVolume.volume(), taskToDelete.taskDescription(), rate, taskToDelete.taskOwner());
         User taskCompleter = Find.findUser(taskToDelete.taskOwner());
         taskCompleter.getCompletedTasks().add(completedTask);
     }

@@ -7,8 +7,9 @@ public record Task(
     int volume,
     
     int id,
-    double avgTimeToComplete,
+    double avgRate,
     String team,
     String taskOwner,
     long taskStartTime
+    
 ) {}

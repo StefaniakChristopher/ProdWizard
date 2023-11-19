@@ -4,8 +4,9 @@ public record CompletedTask(
     double timeToComplete,
     String taskName,
     int volume,
-    String taskDescriptioString,
-    double rate
+    String taskDescriptionString,
+    double rate,
+    String taskCompleter
 
 
 ) {}

@@ -28,11 +28,15 @@ const displayCurrentTasks = async (taskList) => {
       newBox.className = 'box';
       newBox.id = `taskBox-${task.id}`
 
+      if (task.avgRate == 0) {
+        task.avgRate = "N/A"
+      }
+
       // Set content for the new box (you can modify this part)
       newBox.innerHTML = `
           <div class ="topOfBox">
             <h2>${task.taskName}</h2>
-            <p class="boxElement" id="expectedTimeCompletionDisplay">Expected Completion Time: ${task.avgTimeToComplete} mins</p>
+            <p class="boxElement" id="expectedTimeCompletionDisplay">Avg Rate: ${task.avgRate} parts/min</p>
             <p class="boxElement" id="teamDisplay">Team: ${task.team}</p>
             <p class="boxElement" id="teamDisplay">Task Owner: ${task.taskOwner}</p>
           </div>
