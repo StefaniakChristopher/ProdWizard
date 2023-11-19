@@ -21,8 +21,14 @@ const mainContent = document.querySelector('.main-content');
 const modals = document.querySelector('.modals')
 
 const displayCurrentTasks = async (taskList) => {
+  
   console.log(taskList)
   try {
+    const header = document.createElement('h2')
+    header.innerText = 'Current Tasks'
+    header.style.fontSize = '2rem'
+    mainContent.appendChild(header)
+
     taskList.forEach(async task => {
       const newBox = document.createElement('div');
       newBox.className = 'box';
