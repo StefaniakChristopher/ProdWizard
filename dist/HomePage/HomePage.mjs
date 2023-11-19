@@ -23,7 +23,7 @@ const modals = document.querySelector('.modals')
 const displayCurrentTasks = async (taskList) => {
   console.log(taskList)
   try {
-    taskList.forEach(task => {
+    taskList.forEach(async task => {
       const newBox = document.createElement('div');
       newBox.className = 'box';
       newBox.id = `taskBox-${task.id}`
@@ -50,7 +50,11 @@ const displayCurrentTasks = async (taskList) => {
 
       // Append the new box to the main content
       mainContent.appendChild(newBox);
-
+      const currentLoggedInUser = await verifySessionID()
+      if (task.taskOwner != currentLoggedInUser.username) {
+        const taskSubmitButton = document.getElementById(`task-${task.id}`)
+        taskSubmitButton.style.display = 'none'
+      }
       const newModal = document.createElement('div');
       newModal.className = 'modal'
       newModal.id = `enterVolumeModal${task.id}`
