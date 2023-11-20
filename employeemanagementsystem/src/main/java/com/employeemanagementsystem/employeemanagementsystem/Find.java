@@ -38,6 +38,7 @@ public class Find {
     }
 
     public static Task findTaskByID(int ID) {
+        System.out.println("ALL TASKS: " + RESTController.getTasks());
         for (Task task: RESTController.getTasks()) {
             if (task.id() == ID) {
                 return task;

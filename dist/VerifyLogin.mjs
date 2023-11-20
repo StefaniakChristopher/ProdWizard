@@ -194,7 +194,8 @@ const userLogin = async (loginCredentials) => {
   }
 
   const completeTask = async (taskIDandVolume) => {
-    const { id } = taskIDandVolume
+    console.log('elephante')
+    const { id } = taskIDandVolume  //function being double sent for some reason, has to do with the rerender
     const url = host + "/completeTask/" + id
     try {
       const response = await fetch(url, {
@@ -208,7 +209,11 @@ const userLogin = async (loginCredentials) => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      
+      const result = await response.text()
+      console.log(result)
+      if (result) {
+        return true
+      }
       
     } catch (error) {
       console.error('Error: ', error);

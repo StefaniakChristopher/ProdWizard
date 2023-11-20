@@ -99,7 +99,6 @@ public class RESTController {
     public String createTask(@RequestBody Task taskToCreate) { //maybe dropdown menu to create tasks
         String originOfRequestSessionID = taskToCreate.originOfRequestSessionID();
         double avgRate = 0;
-        System.out.println("session ID" + originOfRequestSessionID);
         User originUser = Find.findSessionID(originOfRequestSessionID);
         if (!TaskData.taskDataLists.containsKey(taskToCreate.taskName())) {
             TaskData.createTaskDataArray(taskToCreate.taskName());
@@ -130,7 +129,7 @@ public class RESTController {
     }
 
     @PostMapping(value = "/completeTask/{taskID}")
-    public void completeTask(@RequestBody Task taskIDandVolume) {
+    public boolean completeTask(@RequestBody Task taskIDandVolume) {
         Task taskToDelete = Find.findTaskByID(taskIDandVolume.id());
         double completionTime = System.currentTimeMillis() - taskToDelete.taskStartTime();
         completionTime = (completionTime/(1000*60));
@@ -140,6 +139,7 @@ public class RESTController {
         CompletedTask completedTask = new CompletedTask(completionTime, taskToDelete.taskName(), taskIDandVolume.volume(), taskToDelete.taskDescription(), rate, taskToDelete.taskOwner());
         User taskCompleter = Find.findUser(taskToDelete.taskOwner());
         taskCompleter.getCompletedTasks().add(completedTask);
+        return true;
     }
 
     @PostMapping("/retrieveCompletedTasks")

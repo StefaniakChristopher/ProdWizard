@@ -17,79 +17,123 @@ if (username) {
   signedInUserDisplay.textContent = username
 }
 
+
 const mainContent = document.querySelector('.main-content');
 const modals = document.querySelector('.modals')
 
-const displayCurrentTasks = async (taskList) => {
+const submitTaskFunction = async (Event) => {
+          
+  const completeTaskButton = Event.target
+  console.log(completeTaskButton)
+  const taskID = completeTaskButton.getAttribute('task-info');
+  const volume = document.getElementById("volume-" + taskID).value
+
+  console.log('Task Name:', taskID);
+  const completedTaskSent = await completeTask({
+    "id": taskID,
+    "volume": volume
+  })
   
-  console.log(taskList)
+  if(completedTaskSent) {
+    const newTaskList = await getCurrentTasks()
+    displayTasks(newTaskList)
+  }
+  
+}
+
+const displayTasks = async (taskList) => {
+  
+  console.log("displaytasks is running")
   try {
+    mainContent.innerHTML = ''
     const header = document.createElement('h2')
     header.innerText = 'Current Tasks'
     header.style.fontSize = '2rem'
     mainContent.appendChild(header)
 
-    taskList.forEach(async task => {
+    
+
+
+    if(taskList.length == 0) {
       const newBox = document.createElement('div');
       newBox.className = 'box';
-      newBox.id = `taskBox-${task.id}`
-
-      if (task.avgRate == 0) {
-        task.avgRate = "N/A"
-      }
-
+    
       // Set content for the new box (you can modify this part)
       newBox.innerHTML = `
-          <div class ="topOfBox">
-            <h2>${task.taskName}</h2>
-            <p class="boxElement" id="expectedTimeCompletionDisplay">Avg Rate: ${task.avgRate} parts/min</p>
-            <p class="boxElement" id="teamDisplay">Team: ${task.team}</p>
-            <p class="boxElement" id="teamDisplay">Task Owner: ${task.taskOwner}</p>
-          </div>
-          <div class="bottomOfBox">
-            <p id="taskDescriptionArea">${task.taskDescription}</p>
-          </div>
-          <div class="completeTaskButtonStyling">
-            <button task-info=${task.id} id="task-${task.id}"class="task-${task.id}">Complete</button>
-          </div>
-  `;
-
+              <div class ="topOfBox">
+                <h2>No Tasks to Display, everything done</h2>
+              </div>
+      `;
       // Append the new box to the main content
       mainContent.appendChild(newBox);
-      const currentLoggedInUser = await verifySessionID()
-      if (task.taskOwner != currentLoggedInUser.username) {
-        const taskSubmitButton = document.getElementById(`task-${task.id}`)
-        taskSubmitButton.style.display = 'none'
-      }
-      const newModal = document.createElement('div');
-      newModal.className = 'modal'
-      newModal.id = `enterVolumeModal${task.id}`
+    } else {
+      taskList.forEach(async task => {
+        
+        const newBox = document.createElement('div');
+        newBox.className = 'box';
+        newBox.id = `taskBox-${task.id}`
+        
+        if (task.avgRate == 0) {
+          task.avgRate = "N/A"
+        }
+  
+       
+        newBox.innerHTML = `
+            <div class ="topOfBox">
+              <h2>${task.taskName}</h2>
+              <p class="boxElement" id="expectedTimeCompletionDisplay">Avg Rate: ${task.avgRate} parts/min</p>
+              <p class="boxElement" id="teamDisplay">Team: ${task.team}</p>
+              <p class="boxElement" id="teamDisplay">Task Owner: ${task.taskOwner}</p>
+            </div>
+            <div class="bottomOfBox">
+              <p id="taskDescriptionArea">${task.taskDescription}</p>
+            </div>
+            <div class="completeTaskButtonStyling">
+              <button task-info=${task.id} id="task-${task.id}"class="task-${task.id}">Complete</button>
+            </div>
+    `;
+  
+        // Append the new box to the main content
+        mainContent.appendChild(newBox);
+        const currentLoggedInUser = await verifySessionID()
+        if (task.taskOwner != currentLoggedInUser.username) {
+          const taskSubmitButton = document.getElementById(`task-${task.id}`)
+          taskSubmitButton.style.display = 'none'
+        }
+        const newModal = document.createElement('div');
+        newModal.className = 'modal'
+        newModal.id = `enterVolumeModal${task.id}`
+  
+        newModal.innerHTML = `
+          <span class="close-button" id="enterVolume-close-button${task.id}">&times;</span>
+          <label for="volume">Volume:</label>
+          <input class="generalInput" type="text" id="volume-${task.id}" required></input>
+          <button class="submitTaskButtons" task-info="${task.id}" id="submit-task-${task.id}">Submit Task</button>
+        `
+        modals.appendChild(newModal);
+        modalCloser(`enterVolume-close-button${task.id}`, newModal.id)
+        modalOpener('task-' + task.id , newModal.id)
 
-      newModal.innerHTML = `
-        <span class="close-button" id="enterVolume-close-button${task.id}">&times;</span>
-        <label for="volume">Volume:</label>
-        <input class="generalInput" type="text" id="volume-${task.id}" required></input>
-        <button class="submitTaskButtons" task-info="${task.id}" id="submit-task-${task.id}">Submit Task</button>
-      `
-      modals.appendChild(newModal);
-      modalCloser(`enterVolume-close-button${task.id}`, newModal.id)
-      modalOpener('task-' + task.id , newModal.id)
-      
-      document.getElementById(`submit-task-${task.id}`).addEventListener('click', (Event) => {
-        const completeTaskButton = Event.target
-        console.log(completeTaskButton)
-        const volume = document.getElementById("volume-" + task.id).value
-        const taskID = completeTaskButton.getAttribute('task-info');
-      
-        console.log('Task Name:', taskID);
-        completeTask({
-          "id": taskID,
-          "volume": volume
-        })
-        document.getElementById(newBox.id).remove();
+        
+
+       
+        
+        
+        const submitTaskButton = document.getElementById(`submit-task-${task.id}`)
+        
+        submitTaskButton.removeEventListener('click', submitTaskFunction);
+        submitTaskButton.addEventListener('click', submitTaskFunction);
+        
+          
+        
+       
+        
+        
+        
+        
       });
-      
-    });
+    }
+    
   } catch (error) {
     console.log("Error: " + error)
   }
@@ -163,21 +207,9 @@ const modalCloser = (button, modalType) => {
 }
 
 const currentTasks = await getCurrentTasks()
-if (currentTasks.length === 0) {
-  const newBox = document.createElement('div');
-  newBox.className = 'box';
 
-  // Set content for the new box (you can modify this part)
-  newBox.innerHTML = `
-          <div class ="topOfBox">
-            <h2>No Tasks to Display, everything done</h2>
-          </div>
-  `;
-  // Append the new box to the main content
-  mainContent.appendChild(newBox);
-} else {
-  displayCurrentTasks(currentTasks)
-}
+
+displayTasks(currentTasks)
 
 
 document.getElementById('create-task-button').addEventListener('click', async () => {
@@ -191,6 +223,7 @@ modalCloser('close-button', 'createUserModal')
 modalOpener('create-user', 'createUserModal')
 
 modalCloser('task-close-button', 'createTaskModal')
+modalCloser('createTask', 'createTaskModal')
 modalOpener('create-task-button', 'createTaskModal')
 
 modalCloser('enterTaskCategory-close-button', 'enterTaskCategoryModal')
@@ -228,6 +261,9 @@ document.getElementById('createTask').addEventListener('click', async () => {
     "taskName": taskName,
     "taskDescription": taskDescription
   })
+  
+  const newCurrentTasks = await getCurrentTasks()
+  displayTasks(newCurrentTasks)
   console.log(taskDetails)
 })
 
