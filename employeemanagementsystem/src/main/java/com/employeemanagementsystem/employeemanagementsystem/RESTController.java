@@ -135,18 +135,23 @@ public class RESTController {
         double completionTime = System.currentTimeMillis() - taskToDelete.taskStartTime();
         completionTime = (completionTime/(1000*60));
         double rate = taskIDandVolume.volume()/completionTime;
+        rate = (double)Math.round(rate * 100d) / 100d;
         TaskData.taskDataLists.get(taskToDelete.taskName()).add(rate);
         currentTasks.remove(taskToDelete); // use System.currentTimeMillis(); to track how long it took for the task to be completed
         CompletedTask completedTask = new CompletedTask(completionTime, taskToDelete.taskName(), taskIDandVolume.volume(), taskToDelete.taskDescription(), rate, taskToDelete.taskOwner());
         User taskCompleter = Find.findUser(taskToDelete.taskOwner());
+        System.out.println(taskCompleter.getUsername());
         taskCompleter.getCompletedTasks().add(completedTask);
+        System.out.println(taskCompleter.getCompletedTasks());
         taskCompleter.getCurrentUserTasks().remove(taskToDelete);
         return true;
     }
 
     @PostMapping("/retrieveCompletedTasks")
-    public ArrayList<CompletedTask> retieveCompletedTasks(@RequestBody String username) {
-        User ownerOfCompletedTasks = Find.findUser(username);
+    public ArrayList<CompletedTask> retieveCompletedTasks(@RequestBody String sessionID) {
+        User ownerOfCompletedTasks = Find.findSessionID(sessionID);
+        System.out.println(ownerOfCompletedTasks.getUsername());
+        System.out.println(ownerOfCompletedTasks.getCompletedTasks());
         return ownerOfCompletedTasks.getCompletedTasks();
     }
 

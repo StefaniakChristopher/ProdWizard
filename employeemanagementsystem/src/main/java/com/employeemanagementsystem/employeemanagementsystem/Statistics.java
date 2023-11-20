@@ -11,7 +11,7 @@ public class Statistics {
         }
         double mean = sum/taskData.size();
 
-        mean = (double)Math.round(mean * 100d) / 100d;
+        mean = (double)Math.round(mean);
 
         return mean;
     }

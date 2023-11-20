@@ -1,4 +1,4 @@
-import { verifySessionID, createUser, signOut, createTask, getCurrentTasks, completeTask, createTaskCategory, retrieveTaskCategories, retrieveCurrentUserTasks } from "../VerifyLogin.mjs";
+import { verifySessionID, createUser, signOut, createTask, getCurrentTasks, completeTask, createTaskCategory, retrieveTaskCategories, retrieveCurrentUserTasks, retrieveCompletedUserTasks } from "../VerifyLogin.mjs";
 
 const { sessionID, username } = await verifySessionID()
 
@@ -47,7 +47,7 @@ const displayTasks = async (taskList) => {
   try {
     mainContent.innerHTML = ''
     const header = document.createElement('h2')
-    header.innerText = 'Current Tasks'
+    header.innerText = taskListName
     header.style.fontSize = '2rem'
     mainContent.appendChild(header)
 
@@ -142,6 +142,67 @@ const displayTasks = async (taskList) => {
 
 }
 
+const displayCompletedTasks = async (taskList) => {
+  
+  console.log("displayCompletedTasks is running")
+  try {
+    mainContent.innerHTML = ''
+    const header = document.createElement('h2')
+    header.innerText = taskListName
+    header.style.fontSize = '2rem'
+    mainContent.appendChild(header)
+
+    
+
+
+    if(taskList.length == 0) {
+      const newBox = document.createElement('div');
+      newBox.className = 'box';
+    
+      // Set content for the new box (you can modify this part)
+      newBox.innerHTML = `
+              <div class ="topOfBox">
+                <h2>No Tasks to Display, everything done</h2>
+              </div>
+      `;
+      // Append the new box to the main content
+      mainContent.appendChild(newBox);
+    } else {
+      taskList.forEach(async task => {
+        
+        const newBox = document.createElement('div');
+        newBox.className = 'box';
+        newBox.id = `taskBox-${task.id}`
+        
+        if (task.avgRate == 0) {
+          task.avgRate = "N/A"
+        }
+  
+       
+        newBox.innerHTML = `
+            <div class ="topOfBox">
+              <h2>${task.taskName}</h2>
+              <p class="boxElement" id="expectedTimeCompletionDisplay">Rate: ${task.rate} parts/min</p>
+              <p class="boxElement" id="teamDisplay">Volume: ${task.volume}</p>
+              <p class="boxElement" id="teamDisplay">Task Owner: ${task.taskCompleter}</p>
+            </div>
+            <div class="bottomOfBox">
+              <p id="taskDescriptionArea">${task.taskDescriptionString}</p>
+            </div>
+    `;
+  
+        // Append the new box to the main content
+        mainContent.appendChild(newBox);
+      });
+    }
+    
+  } catch (error) {
+    console.log("Error: " + error)
+  }
+
+
+}
+
 
 
 const newOption = (optionName) => {
@@ -207,9 +268,8 @@ const modalCloser = (button, modalType) => {
   })
 }
 
+var taskListName = 'Current Tasks'
 const currentTasks = await getCurrentTasks()
-
-
 displayTasks(currentTasks)
 
 
@@ -275,14 +335,24 @@ document.getElementById('createTaskCategoryButton').addEventListener('click', as
 })
 
 document.getElementById('current-tasks-option').addEventListener('click', async () => {
+  taskListName = 'Current Tasks'
   const newCurrentTasks = await getCurrentTasks()
   displayTasks(newCurrentTasks)
 })
 
 document.getElementById('my-tasks-option').addEventListener('click', async () => {
+  taskListName = 'My Tasks'
   const newCurrentTasks = await retrieveCurrentUserTasks()
   displayTasks(newCurrentTasks)
 })
+
+document.getElementById('my-completed-tasks-option').addEventListener('click', async () => {
+  taskListName = 'My Completed Tasks'
+  const newCompletedTasks = await retrieveCompletedUserTasks()
+  displayCompletedTasks(newCompletedTasks)
+})
+
+
 
 
 

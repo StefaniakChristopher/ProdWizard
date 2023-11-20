@@ -294,4 +294,32 @@ const userLogin = async (loginCredentials) => {
 
   }
 
-export { retrieveCookies, verifySessionID, userLogin, createUser, signOut, createTask, getCurrentTasks, completeTask, createTaskCategory, retrieveTaskCategories, retrieveCurrentUserTasks }
+  
+
+  const retrieveCompletedUserTasks = async () => {
+    const currentUserSessionID = retrieveCookies()
+    const url = host + "/retrieveCompletedTasks"
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(currentUserSessionID),
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      
+      const completedUserTasks = await response.text()
+      const completedUserTasksArray = JSON.parse(completedUserTasks)
+      return completedUserTasksArray
+      
+    } catch (error) {
+      console.error('Error: ', error);
+    }
+
+  }
+
+export { retrieveCookies, verifySessionID, userLogin, createUser, signOut, createTask, getCurrentTasks, completeTask, createTaskCategory, retrieveTaskCategories, retrieveCurrentUserTasks, retrieveCompletedUserTasks }
