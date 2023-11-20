@@ -120,6 +120,7 @@ public class RESTController {
         TaskIDcounter += 1;
         System.out.println("task that was created: " + newTask);
         currentTasks.add(newTask);
+        originUser.getCurrentUserTasks().add(newTask);
         return "hi";
     }
 
@@ -139,6 +140,7 @@ public class RESTController {
         CompletedTask completedTask = new CompletedTask(completionTime, taskToDelete.taskName(), taskIDandVolume.volume(), taskToDelete.taskDescription(), rate, taskToDelete.taskOwner());
         User taskCompleter = Find.findUser(taskToDelete.taskOwner());
         taskCompleter.getCompletedTasks().add(completedTask);
+        taskCompleter.getCurrentUserTasks().remove(taskToDelete);
         return true;
     }
 
@@ -146,6 +148,12 @@ public class RESTController {
     public ArrayList<CompletedTask> retieveCompletedTasks(@RequestBody String username) {
         User ownerOfCompletedTasks = Find.findUser(username);
         return ownerOfCompletedTasks.getCompletedTasks();
+    }
+
+    @PostMapping("/retrieveCurrentUserTasks")
+    public ArrayList<Task> retieveCurrentUserTasks(@RequestBody String sessionID) {
+        User ownerOfCurrentTasks = Find.findSessionID(sessionID);
+        return ownerOfCurrentTasks.getCurrentUserTasks();
     }
 
     @PostMapping("/createTaskCategory")

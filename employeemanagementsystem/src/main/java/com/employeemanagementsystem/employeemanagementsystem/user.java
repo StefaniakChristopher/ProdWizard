@@ -9,6 +9,7 @@ public class User {
     private String tasks;
     private String sessionID;
     private ArrayList<CompletedTask> completedTasks = new ArrayList<>();
+    private ArrayList<Task> currentUserTasks = new ArrayList<>();
 
     public User(String username, String password, String team, String tasks, String sessionID) {
         this.username = username;
@@ -53,6 +54,10 @@ public class User {
 
     public ArrayList<CompletedTask> getCompletedTasks() {
         return completedTasks;
+    }
+
+    public ArrayList<Task> getCurrentUserTasks() {
+        return currentUserTasks;
     }
 }
 

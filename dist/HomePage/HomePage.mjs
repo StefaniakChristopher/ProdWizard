@@ -1,4 +1,4 @@
-import { verifySessionID, createUser, signOut, createTask, getCurrentTasks, completeTask, createTaskCategory, retrieveTaskCategories } from "../VerifyLogin.mjs";
+import { verifySessionID, createUser, signOut, createTask, getCurrentTasks, completeTask, createTaskCategory, retrieveTaskCategories, retrieveCurrentUserTasks } from "../VerifyLogin.mjs";
 
 const { sessionID, username } = await verifySessionID()
 
@@ -112,6 +112,7 @@ const displayTasks = async (taskList) => {
         `
         modals.appendChild(newModal);
         modalCloser(`enterVolume-close-button${task.id}`, newModal.id)
+        modalCloser(`submit-task-${task.id}`, newModal.id)
         modalOpener('task-' + task.id , newModal.id)
 
         
@@ -271,6 +272,16 @@ document.getElementById('createTaskCategoryButton').addEventListener('click', as
   const taskCategoryName = document.getElementById("taskCategory").value
   const response = await createTaskCategory(taskCategoryName)
   console.log(taskCategoryName)
+})
+
+document.getElementById('current-tasks-option').addEventListener('click', async () => {
+  const newCurrentTasks = await getCurrentTasks()
+  displayTasks(newCurrentTasks)
+})
+
+document.getElementById('my-tasks-option').addEventListener('click', async () => {
+  const newCurrentTasks = await retrieveCurrentUserTasks()
+  displayTasks(newCurrentTasks)
 })
 
 
