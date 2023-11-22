@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prodwizard-frontend-deployment
+  labels:
+    app: prodwizard-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prodwizard-frontend
+  template:
+    metadata:
+      labels:
+        app: prodwizard-frontend
+    spec:
+      containers:
+      - name: prodwizard-frontend
+        image: chrisstefaniak/prodwizard-frontend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 4000

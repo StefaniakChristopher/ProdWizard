@@ -1,0 +1,159 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prodwizard-ingress
+  annotations:
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: prodwizard.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: /LoginPage/index.html
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 4000
+      - pathType: Prefix
+        path: /LoginPage/LoginPage.mjs
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 4000
+      - pathType: Prefix
+        path: /VerifyLogin.mjs
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 4000
+      - pathType: Prefix
+        path: /HomePage/home.html
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 4000
+      - pathType: Prefix
+        path: /HomePage/home.css
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 4000
+      - pathType: Prefix
+        path: /HomePage/HomePage.mjs
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 4000
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 4000
+      - pathType: Prefix
+        path: /login
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /session
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /newuser
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /signout
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /createTask
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /retrieveTasks
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /completeTask
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /retrieveCompletedTasks
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /retrieveCurrentUserTasks
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /createTaskCategory
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /retrieveTaskCategories
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /retrieveSearchedUser
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /retrievePlacement
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8080
+      - pathType: Prefix
+        path: /produceLeaderboard
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8080
+              

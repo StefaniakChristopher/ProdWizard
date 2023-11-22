@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "http-server -p 4000 -c-1 -a localhost -o /LoginPage/index.html"
+    "start": "http-server -p 4000 -c-1 -o /LoginPage/index.html"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",

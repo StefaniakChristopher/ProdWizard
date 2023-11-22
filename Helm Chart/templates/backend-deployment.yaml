@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prodwizard-backend-deployment
+  labels:
+    app: prodwizard-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prodwizard-backend
+  template:
+    metadata:
+      labels:
+        app: prodwizard-backend
+    spec:
+      containers:
+      - name: prodwizard-backend
+        image: chrisstefaniak/prodwizard-backend:latest
+        imagePullPolicy: Always 
+        ports:
+        - containerPort: 8080

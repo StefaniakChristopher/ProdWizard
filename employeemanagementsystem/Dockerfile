@@ -1,4 +1,4 @@
-FROM openjdk:19
+FROM maven:latest
 
 COPY . /app
 

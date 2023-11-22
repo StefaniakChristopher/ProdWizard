@@ -1,4 +1,4 @@
-const host = "http://localhost:8080"
+const host = "http://prodwizard.com"
 
 const retrieveCookies = () => {
     const cookies = document.cookie.split("; ");
