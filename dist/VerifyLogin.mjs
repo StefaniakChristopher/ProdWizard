@@ -69,6 +69,7 @@ const userLogin = async (loginCredentials) => {
       console.log(sessionID);
       if (sessionID == "FAILED") {
         console.log("Username and/or password incorrect")
+        alert("Username and/or password incorrect")
       } else {
         const expires = new Date(); 
         expires.setTime(expires.getTime() + 60 * 60 * 1000);
