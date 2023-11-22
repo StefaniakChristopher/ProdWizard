@@ -322,4 +322,29 @@ const userLogin = async (loginCredentials) => {
 
   }
 
-export { retrieveCookies, verifySessionID, userLogin, createUser, signOut, createTask, getCurrentTasks, completeTask, createTaskCategory, retrieveTaskCategories, retrieveCurrentUserTasks, retrieveCompletedUserTasks }
+  const retrieveUserStatsByUsername = async (username) => {
+    const url = host + "/retrieveSearchedUser"
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(username),
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      
+      const userStats = await response.json()
+      return userStats
+      
+    } catch (error) {
+      console.error('Error: ', error);
+    }
+
+  }
+  
+
+export { retrieveCookies, verifySessionID, userLogin, createUser, signOut, createTask, getCurrentTasks, completeTask, createTaskCategory, retrieveTaskCategories, retrieveCurrentUserTasks, retrieveCompletedUserTasks, retrieveUserStatsByUsername }

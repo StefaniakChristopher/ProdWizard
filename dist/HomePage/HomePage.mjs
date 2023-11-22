@@ -1,4 +1,4 @@
-import { verifySessionID, createUser, signOut, createTask, getCurrentTasks, completeTask, createTaskCategory, retrieveTaskCategories, retrieveCurrentUserTasks, retrieveCompletedUserTasks } from "../VerifyLogin.mjs";
+import { verifySessionID, createUser, signOut, createTask, getCurrentTasks, completeTask, createTaskCategory, retrieveTaskCategories, retrieveCurrentUserTasks, retrieveCompletedUserTasks, retrieveUserStatsByUsername } from "../VerifyLogin.mjs";
 
 const { sessionID, username } = await verifySessionID()
 
@@ -20,6 +20,32 @@ if (username) {
 
 const mainContent = document.querySelector('.main-content');
 const modals = document.querySelector('.modals')
+
+const displayUserStats = async (username) => {
+  const userStats = await retrieveUserStatsByUsername(username)  
+  mainContent.innerHTML = ''
+  const header = document.createElement('h2')
+  header.innerText = "User Lookup"
+  header.style.fontSize = '2rem'
+  mainContent.appendChild(header)
+
+  const userBox = document.createElement('div');
+  userBox.className = 'userBox';
+
+  userBox.innerHTML = `
+            <div class ="topOfBox">
+              <h2>${userStats.username}</h2>
+              <p class="boxElement" id="expectedTimeCompletionDisplay">Tasks Completed: ${userStats.amountOfTasksCompleted}</p>
+              <p class="boxElement" id="teamDisplay">Team: ${userStats.team}</p>
+            </div>
+            <div class="bottomOfBox">
+              <p id="taskDescriptionArea"></p>
+            </div>
+    `
+
+  mainContent.appendChild(userBox);
+
+}
 
 const submitTaskFunction = async (Event) => {
           
@@ -81,7 +107,7 @@ const displayTasks = async (taskList) => {
         newBox.innerHTML = `
             <div class ="topOfBox">
               <h2>${task.taskName}</h2>
-              <p class="boxElement" id="expectedTimeCompletionDisplay">Avg Rate: ${task.avgRate} parts/min</p>
+              <p class="boxElement" id="expectedTimeCompletionDisplay">Avg Rate for ${task.taskOwner}: ${task.avgRate} parts/min</p>
               <p class="boxElement" id="teamDisplay">Team: ${task.team}</p>
               <p class="boxElement" id="teamDisplay">Task Owner: ${task.taskOwner}</p>
             </div>
@@ -184,6 +210,7 @@ const displayCompletedTasks = async (taskList) => {
               <h2>${task.taskName}</h2>
               <p class="boxElement" id="expectedTimeCompletionDisplay">Rate: ${task.rate} parts/min</p>
               <p class="boxElement" id="teamDisplay">Volume: ${task.volume}</p>
+              <p class="boxElement" id="teamDisplay">Proficiency: ${task.volume}</p>
               <p class="boxElement" id="teamDisplay">Task Owner: ${task.taskCompleter}</p>
             </div>
             <div class="bottomOfBox">
@@ -290,6 +317,10 @@ modalOpener('create-task-button', 'createTaskModal')
 modalCloser('enterTaskCategory-close-button', 'enterTaskCategoryModal')
 modalOpener('create-task-category-button', 'enterTaskCategoryModal')
 
+modalCloser('userLookupModal-close-button', 'userLookupModal')
+modalCloser('lookupUserModalButton', 'userLookupModal')
+modalOpener('user-lookup-sidebar', 'userLookupModal')
+
 document.getElementById('create-user-button').addEventListener('click', async () => {
   const username = document.getElementById("username").value
   const password = document.getElementById("password").value
@@ -350,6 +381,11 @@ document.getElementById('my-completed-tasks-option').addEventListener('click', a
   taskListName = 'My Completed Tasks'
   const newCompletedTasks = await retrieveCompletedUserTasks()
   displayCompletedTasks(newCompletedTasks)
+})
+
+document.getElementById('lookupUserModalButton').addEventListener('click', async () => {
+  const userToLookup = document.getElementById('username-lookup').value
+  displayUserStats(userToLookup)
 })
 
 

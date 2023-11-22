@@ -8,6 +8,7 @@ public class User {
     private String team;
     private String tasks;
     private String sessionID;
+    private int amountOfTasksCompleted;
     private ArrayList<CompletedTask> completedTasks = new ArrayList<>();
     private ArrayList<Task> currentUserTasks = new ArrayList<>();
 
@@ -17,6 +18,7 @@ public class User {
         this.team = team;
         this.tasks = tasks;
         this.sessionID = sessionID;
+        this.amountOfTasksCompleted = 0;
     }
 
     public String getUsername() {
@@ -34,6 +36,14 @@ public class User {
 
     public void setTasks(String tasks) {
         this.tasks = tasks;
+    }
+
+    public int getAmountOfTasksCompleted() {
+        return amountOfTasksCompleted;
+    }
+
+    public void setAmountOfTasksCompleted(int amountOfTasksCompleted) {
+        this.amountOfTasksCompleted = amountOfTasksCompleted;
     }
 
     public String getSessionID() {

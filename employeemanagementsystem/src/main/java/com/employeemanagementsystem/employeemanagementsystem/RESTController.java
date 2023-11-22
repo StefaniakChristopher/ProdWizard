@@ -20,7 +20,8 @@ public class RESTController {
 
     ArrayList<Double> taskDataList = new ArrayList<>();
        
-    
+    private static ArrayList<TaskStatsPerUserPerTask> taskStatsForAllTasks = new ArrayList<>();
+    private static ArrayList<AllCompletedTasks> allCompletedTasksArrayList = new ArrayList<>();
     private static ArrayList<User> users = new ArrayList<>();
     private static ArrayList<Task> currentTasks = new ArrayList<>();
     private static ArrayList<String> taskCategories = new ArrayList<>();
@@ -31,6 +32,14 @@ public class RESTController {
 
     public static ArrayList<Task> getTasks(){
         return currentTasks;
+    }
+
+    public static ArrayList<AllCompletedTasks> getAllCompletedTasksArrayList(){
+        return allCompletedTasksArrayList;
+    }
+
+    public static ArrayList<TaskStatsPerUserPerTask> getTaskStatsForAllTasks(){
+        return taskStatsForAllTasks;
     }
 
     public RESTController() {
@@ -100,11 +109,25 @@ public class RESTController {
         String originOfRequestSessionID = taskToCreate.originOfRequestSessionID();
         double avgRate = 0;
         User originUser = Find.findSessionID(originOfRequestSessionID);
-        if (!TaskData.taskDataLists.containsKey(taskToCreate.taskName())) {
-            TaskData.createTaskDataArray(taskToCreate.taskName());
+        TaskStatsPerUserPerTask foundTaskStats = Find.findTaskStatsByTaskNameAndUser(taskToCreate.taskName(), originUser.getUsername());
+        if( foundTaskStats == null) {
+            if(Find.findAllCompletedTasks(taskToCreate.taskName()) == null) {
+                AllCompletedTasks allCompletedTasks = new AllCompletedTasks(taskToCreate.taskName());
+                allCompletedTasksArrayList.add(allCompletedTasks);
+            }
+            avgRate = 0;
+            TaskStatsPerUserPerTask taskstats = new TaskStatsPerUserPerTask(taskToCreate.taskName(), originUser.getUsername());
+            taskStatsForAllTasks.add(taskstats);
+            System.out.println("taskstats was created");
         } else {
-            avgRate = Statistics.meanValue(TaskData.taskDataLists.get(taskToCreate.taskName()));
+            avgRate = foundTaskStats.getMean();
         }
+
+        // if (!TaskData.taskDataLists.containsKey(taskToCreate.taskName())) {
+        //     TaskData.createTaskDataArray(taskToCreate.taskName());
+        // } else {
+        //     avgRate = Statistics.meanValue(TaskData.taskDataLists.get(taskToCreate.taskName()));
+        // }
 
         Task newTask = new Task(
             taskToCreate.taskName(), 
@@ -135,8 +158,18 @@ public class RESTController {
         double completionTime = System.currentTimeMillis() - taskToDelete.taskStartTime();
         completionTime = (completionTime/(1000*60));
         double rate = taskIDandVolume.volume()/completionTime;
+        System.out.println("rate: " + rate);
+        AllCompletedTasks foundTaskStatsArray = Find.findAllCompletedTasks(taskToDelete.taskName());
+        TaskStatsPerUserPerTask foundTaskStats = Find.findTaskStatsByTaskNameAndUser(taskToDelete.taskName(), taskToDelete.taskOwner());
+        double oldMean = foundTaskStats.getMean();
+        foundTaskStatsArray.getCompletedTasks().remove(oldMean); //We need to remove the old mean so that it doesnt exist in our placement calculation
+        foundTaskStats.addStat(rate);
         rate = (double)Math.round(rate * 100d) / 100d;
-        TaskData.taskDataLists.get(taskToDelete.taskName()).add(rate);
+        double newMean = foundTaskStats.getMean();
+
+        
+        foundTaskStatsArray.getCompletedTasks().add(newMean);
+
         currentTasks.remove(taskToDelete); // use System.currentTimeMillis(); to track how long it took for the task to be completed
         CompletedTask completedTask = new CompletedTask(completionTime, taskToDelete.taskName(), taskIDandVolume.volume(), taskToDelete.taskDescription(), rate, taskToDelete.taskOwner());
         User taskCompleter = Find.findUser(taskToDelete.taskOwner());
@@ -144,6 +177,9 @@ public class RESTController {
         taskCompleter.getCompletedTasks().add(completedTask);
         System.out.println(taskCompleter.getCompletedTasks());
         taskCompleter.getCurrentUserTasks().remove(taskToDelete);
+        taskCompleter.setAmountOfTasksCompleted(taskCompleter.getAmountOfTasksCompleted() + 1);
+
+
         return true;
     }
 
@@ -178,8 +214,24 @@ public class RESTController {
         return taskCategories;
     }
        
+    @PostMapping("/retrieveSearchedUser")
+    public User retrieveSearchedUser(@RequestBody String username) {
+        String processedUsername = Misc.stringParser(username);
+        System.out.println(processedUsername);
+        User searchedUser = Find.findUser(processedUsername);
+        return searchedUser;
+    }
 
-
-
+    @PostMapping("/retrievePlacement")
+    public int retrievePlacement(@RequestBody TaskStatsPerUserPerTask taskNameAndUser) {
+        String taskName = taskNameAndUser.getTaskCategory();
+        String user = taskNameAndUser.getTaskStatsUser();
+        TaskStatsPerUserPerTask taskStats = Find.findTaskStatsByTaskNameAndUser(taskName, user);
+        double mean = taskStats.getMean();
+        AllCompletedTasks masterTaskList = Find.findAllCompletedTasks(taskName);
+        int placement = masterTaskList.givePlacement(mean);
+        return placement;
+        
+    }
     
 }

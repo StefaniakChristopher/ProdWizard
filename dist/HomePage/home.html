@@ -26,12 +26,20 @@
             <br>
             <button class="sidebar-option" id="my-completed-tasks-option">My Completed Tasks</button>
             <br>
-            <button class="sidebar-option">User Lookup</button>
+            <button class="sidebar-option" id="user-lookup-sidebar">User Lookup</button>
         </div>
         <div class="main-content">
         </div>
     </div>
     <div class="modals">
+        <div id="userLookupModal" class="modal">
+            <span class="close-button" id="userLookupModal-close-button">&times;</span>
+            <label for="username-lookup">Username:</label>
+            <input class="generalInput" type="text" id="username-lookup" name="username-lookup" required>
+    
+            <button id="lookupUserModalButton">Search</button>
+        </div>
+
         <div id="enterTaskCategoryModal" class="modal">
             <span class="close-button" id="enterTaskCategory-close-button">&times;</span>
             <label for="taskCategory">Task Category Name:</label>

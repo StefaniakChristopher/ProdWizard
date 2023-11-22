@@ -47,4 +47,28 @@ public class Find {
         return null;
     }
 
+    public static TaskStatsPerUserPerTask findTaskStatsByTaskNameAndUser(String taskName, String user) {
+        System.out.println(taskName);
+        System.out.println(user);
+        for (TaskStatsPerUserPerTask taskstats : RESTController.getTaskStatsForAllTasks()) {
+            System.out.println(taskstats.getTaskCategory());
+            System.out.println(taskstats.getTaskStatsUser());
+            if (taskstats.getTaskCategory().equals(taskName)) {
+                if (taskstats.getTaskStatsUser().equals(user)) { 
+                    return taskstats;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static AllCompletedTasks findAllCompletedTasks(String taskName) {
+        for (AllCompletedTasks taskstats : RESTController.getAllCompletedTasksArrayList()) {
+            if (taskstats.getTaskCategory().equals(taskName)) {
+                    return taskstats;
+            }
+        }
+        return null;
+    }
+
 }
