@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class AllCompletedTasks { 
+    
     private ArrayList<Double> completedTaskRatesAcrossUsers = new ArrayList<>();
     private String taskCategory;
 
@@ -36,5 +37,15 @@ public class AllCompletedTasks {
         int realPlacement = completedTaskRatesAcrossUsers.size() + 1 - placement; //Collections.sort is in ascending order from left to right
         System.out.println(realPlacement);
         return realPlacement;
+    }
+
+    public ArrayList<String> createLeaderboard() {
+        ArrayList<String> leaderboardUsers = new ArrayList<>();
+        Collections.sort(completedTaskRatesAcrossUsers);
+        for (double rate: completedTaskRatesAcrossUsers) {
+            String user = Find.findTaskStatsByTaskNameAndUserUsingMean(taskCategory, rate);
+            leaderboardUsers.add(user);
+        }
+        return leaderboardUsers;
     }
 }

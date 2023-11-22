@@ -62,6 +62,22 @@ public class Find {
         return null;
     }
 
+    public static String findTaskStatsByTaskNameAndUserUsingMean(String taskName, double mean) {
+        System.out.println(taskName);
+        System.out.println(mean);
+        for (TaskStatsPerUserPerTask taskstats : RESTController.getTaskStatsForAllTasks()) { //for use in producing leaderboard
+            System.out.println(taskstats.getTaskCategory());
+            System.out.println(taskstats.getMean());
+            if (taskstats.getTaskCategory().equals(taskName)) {
+                if (taskstats.getMean() == (mean)) { 
+                    return taskstats.getTaskStatsUser();
+                }
+            }
+        }
+        return null;
+    }
+
+
     public static AllCompletedTasks findAllCompletedTasks(String taskName) {
         for (AllCompletedTasks taskstats : RESTController.getAllCompletedTasksArrayList()) {
             if (taskstats.getTaskCategory().equals(taskName)) {

@@ -345,6 +345,57 @@ const userLogin = async (loginCredentials) => {
     }
 
   }
-  
 
-export { retrieveCookies, verifySessionID, userLogin, createUser, signOut, createTask, getCurrentTasks, completeTask, createTaskCategory, retrieveTaskCategories, retrieveCurrentUserTasks, retrieveCompletedUserTasks, retrieveUserStatsByUsername }
+  
+  
+  const retrievePlacement = async (taskCategoryAndUsername) => {
+    const url = host + "/retrievePlacement"
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(taskCategoryAndUsername),
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      
+      const placement = await response.text()
+      console.log(placement)
+      return placement
+      
+    } catch (error) {
+      console.error('Error: ', error);
+    }
+
+  }
+
+  const produceLeaderboard = async (taskCategory) => {
+    const url = host + "/produceLeaderboard"
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(taskCategory),
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      
+      const leaderboard = await response.text()
+      const parsedLeaderboard = JSON.parse(leaderboard)
+      return parsedLeaderboard
+      
+    } catch (error) {
+      console.error('Error: ', error);
+    }
+
+  }
+
+export { retrieveCookies, verifySessionID, userLogin, createUser, signOut, createTask, getCurrentTasks, completeTask, createTaskCategory, retrieveTaskCategories, retrieveCurrentUserTasks, retrieveCompletedUserTasks, retrieveUserStatsByUsername, retrievePlacement, produceLeaderboard }

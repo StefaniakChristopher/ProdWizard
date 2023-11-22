@@ -1,4 +1,4 @@
-import { verifySessionID, createUser, signOut, createTask, getCurrentTasks, completeTask, createTaskCategory, retrieveTaskCategories, retrieveCurrentUserTasks, retrieveCompletedUserTasks, retrieveUserStatsByUsername } from "../VerifyLogin.mjs";
+import { verifySessionID, createUser, signOut, createTask, getCurrentTasks, completeTask, createTaskCategory, retrieveTaskCategories, retrieveCurrentUserTasks, retrieveCompletedUserTasks, retrieveUserStatsByUsername, retrievePlacement, produceLeaderboard } from "../VerifyLogin.mjs";
 
 const { sessionID, username } = await verifySessionID()
 
@@ -21,30 +21,28 @@ if (username) {
 const mainContent = document.querySelector('.main-content');
 const modals = document.querySelector('.modals')
 
-const displayUserStats = async (username) => {
-  const userStats = await retrieveUserStatsByUsername(username)  
+const displayLeaderboard = async (leaderboard, taskName) => {
+ 
   mainContent.innerHTML = ''
   const header = document.createElement('h2')
-  header.innerText = "User Lookup"
+  header.innerText = `Leaderboard for ${taskName}`
   header.style.fontSize = '2rem'
   mainContent.appendChild(header)
+  
+  leaderboard.forEach(async user => {
+    const userBox = document.createElement('div');
+    userBox.className = 'box';
 
-  const userBox = document.createElement('div');
-  userBox.className = 'userBox';
+    userBox.innerHTML = `
+              <div class ="topOfBox">
+                <h2>${user.username}</h2>
+                <p class="boxElement" id="expectedTimeCompletionDisplay">Placement: ${user.placementValue}</p>
+                <p class="boxElement" id="teamDisplay">Avg Rate: ${user.mean} parts/min</p>
+              </div>
+      `
 
-  userBox.innerHTML = `
-            <div class ="topOfBox">
-              <h2>${userStats.username}</h2>
-              <p class="boxElement" id="expectedTimeCompletionDisplay">Tasks Completed: ${userStats.amountOfTasksCompleted}</p>
-              <p class="boxElement" id="teamDisplay">Team: ${userStats.team}</p>
-            </div>
-            <div class="bottomOfBox">
-              <p id="taskDescriptionArea"></p>
-            </div>
-    `
-
-  mainContent.appendChild(userBox);
-
+    mainContent.appendChild(userBox);
+  })
 }
 
 const submitTaskFunction = async (Event) => {
@@ -170,6 +168,7 @@ const displayTasks = async (taskList) => {
 
 const displayCompletedTasks = async (taskList) => {
   
+
   console.log("displayCompletedTasks is running")
   try {
     mainContent.innerHTML = ''
@@ -195,6 +194,8 @@ const displayCompletedTasks = async (taskList) => {
       mainContent.appendChild(newBox);
     } else {
       taskList.forEach(async task => {
+
+        
         
         const newBox = document.createElement('div');
         newBox.className = 'box';
@@ -210,7 +211,6 @@ const displayCompletedTasks = async (taskList) => {
               <h2>${task.taskName}</h2>
               <p class="boxElement" id="expectedTimeCompletionDisplay">Rate: ${task.rate} parts/min</p>
               <p class="boxElement" id="teamDisplay">Volume: ${task.volume}</p>
-              <p class="boxElement" id="teamDisplay">Proficiency: ${task.volume}</p>
               <p class="boxElement" id="teamDisplay">Task Owner: ${task.taskCompleter}</p>
             </div>
             <div class="bottomOfBox">
@@ -232,8 +232,8 @@ const displayCompletedTasks = async (taskList) => {
 
 
 
-const newOption = (optionName) => {
-  const dropDownMenuItself = document.getElementById('taskName')
+const newOption = (optionName, targetOption) => {
+  const dropDownMenuItself = document.getElementById(targetOption)
   const newOption = document.createElement('option');
   newOption.value = optionName
   newOption.textContent = optionName
@@ -241,19 +241,19 @@ const newOption = (optionName) => {
   dropDownMenuItself.appendChild(newOption);
 }
 
-const dropDownMenuAvailableTasks = async (taskCategoryList) => {
+const dropDownMenuAvailableTasks = async (taskCategoryList, targetOption) => {
   console.log(taskCategoryList)
   try {
-    const dropDownMenuItself = document.getElementById('taskName')
+    const dropDownMenuItself = document.getElementById(targetOption)
     dropDownMenuItself.innerHTML = "";
     if(taskCategoryList.length != 0) {
 
       taskCategoryList.forEach(taskCategory => {
-        newOption(taskCategory)
+        newOption(taskCategory, targetOption)
     } )
 
   } else {
-      newOption("No Tasks Avaiable")
+      newOption("No Tasks Avaiable", targetOption)
   }
     
   } catch (error) {
@@ -301,7 +301,11 @@ displayTasks(currentTasks)
 
 
 document.getElementById('create-task-button').addEventListener('click', async () => {
-  dropDownMenuAvailableTasks(await retrieveTaskCategories())
+  dropDownMenuAvailableTasks(await retrieveTaskCategories(),'taskName' )
+})
+
+document.getElementById('leaderboard-lookup').addEventListener('click', async () => {
+  dropDownMenuAvailableTasks(await retrieveTaskCategories(),'leaderboard-task-selection')
 })
 
 
@@ -317,9 +321,9 @@ modalOpener('create-task-button', 'createTaskModal')
 modalCloser('enterTaskCategory-close-button', 'enterTaskCategoryModal')
 modalOpener('create-task-category-button', 'enterTaskCategoryModal')
 
-modalCloser('userLookupModal-close-button', 'userLookupModal')
-modalCloser('lookupUserModalButton', 'userLookupModal')
-modalOpener('user-lookup-sidebar', 'userLookupModal')
+modalCloser('leaderboardModal-close-button', 'leaderboardModal')
+modalCloser('leaderboardModalButton', 'leaderboardModal')
+modalOpener('leaderboard-lookup', 'leaderboardModal')
 
 document.getElementById('create-user-button').addEventListener('click', async () => {
   const username = document.getElementById("username").value
@@ -383,9 +387,10 @@ document.getElementById('my-completed-tasks-option').addEventListener('click', a
   displayCompletedTasks(newCompletedTasks)
 })
 
-document.getElementById('lookupUserModalButton').addEventListener('click', async () => {
-  const userToLookup = document.getElementById('username-lookup').value
-  displayUserStats(userToLookup)
+document.getElementById('leaderboardModalButton').addEventListener('click', async () => {
+  const taskName = document.getElementById('leaderboard-task-selection').value
+  const leaderboard = await produceLeaderboard(taskName)
+  displayLeaderboard(leaderboard, taskName)
 })
 
 

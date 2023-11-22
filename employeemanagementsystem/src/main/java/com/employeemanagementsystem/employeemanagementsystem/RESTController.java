@@ -25,6 +25,7 @@ public class RESTController {
     private static ArrayList<User> users = new ArrayList<>();
     private static ArrayList<Task> currentTasks = new ArrayList<>();
     private static ArrayList<String> taskCategories = new ArrayList<>();
+    private static ArrayList<LeaderBoardUser> leaderboardUsers = new ArrayList<>();
 
     public static ArrayList<User> getUsers(){
         return users;
@@ -41,6 +42,11 @@ public class RESTController {
     public static ArrayList<TaskStatsPerUserPerTask> getTaskStatsForAllTasks(){
         return taskStatsForAllTasks;
     }
+
+    public static ArrayList<LeaderBoardUser> getLeaderboardUsers(){
+        return leaderboardUsers;
+    }
+
 
     public RESTController() {
         users.add(admin);
@@ -232,6 +238,28 @@ public class RESTController {
         int placement = masterTaskList.givePlacement(mean);
         return placement;
         
+    }
+
+
+    @PostMapping("/produceLeaderboard")
+    public ArrayList<LeaderBoardUser> produceLeaderboard(@RequestBody String taskName) {
+        leaderboardUsers.clear();
+        String processedTaskName = Misc.stringParser(taskName);
+        System.out.println(processedTaskName);
+        AllCompletedTasks allCompletedTasksForSpecifiedTask = Find.findAllCompletedTasks(processedTaskName);
+        ArrayList<String> leaderboard = allCompletedTasksForSpecifiedTask.createLeaderboard();
+        for (String person: leaderboard) {
+            System.out.println(person);
+            TaskStatsPerUserPerTask taskNameAndUser = Find.findTaskStatsByTaskNameAndUser(processedTaskName, person);
+            double mean = taskNameAndUser.getMean();
+            LeaderBoardUser user = new LeaderBoardUser(person, allCompletedTasksForSpecifiedTask.givePlacement(mean), mean);
+            leaderboardUsers.add(user);
+        }
+        ArrayList<LeaderBoardUser> reversedLeaderboard = new ArrayList<>();
+        for (int i = leaderboardUsers.size() - 1 ; i >= 0; i-- ) {
+            reversedLeaderboard.add(leaderboardUsers.get(i));
+        }
+        return reversedLeaderboard;
     }
     
 }
