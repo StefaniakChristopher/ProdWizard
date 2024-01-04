@@ -3,6 +3,10 @@
 
 This is a web application designed to provide employers in the manufacturing industry with a means to record their employees' efficiency concerning common quantitative tasks one may see in a manufacturing environment, such as sorting and stamping automotive parts
 
+
+![prodwizardScreenshot](https://github.com/StefaniakChristopher/EmployeeManagementSystem/assets/123501656/f984de41-7d29-43b9-93a7-af9b32804e0c)
+
+
 -------------------------------------------
 MAIN FUNCTIONALITY
 
