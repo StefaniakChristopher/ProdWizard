@@ -13,7 +13,7 @@ TO RUN APPLICATION:
 
   3. Enter "minikube addons enable ingress"
 
-  4. Navigate to the "Helm Chart" folder in the project folder and enter "helm install graph-builder ."
+  4. Navigate to the "Helm Chart" folder in the project folder and enter "helm install prodwizard ."
 
   4. Enter "kubectl get pod --watch" (watch them grow up)
 
